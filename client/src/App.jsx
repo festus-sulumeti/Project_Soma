@@ -1,10 +1,9 @@
-import { Routes, Route } from "react-router-dom"
-import Home from "./pages/Home"
-import Login from "./pages/Login"
-import Signup from "./pages/Signup"
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 function App() {
-
   return (
     <main className="pb-10">
       <Routes>
@@ -16,4 +15,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
