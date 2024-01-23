@@ -16,7 +16,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Link } from 'react-router-dom';
 
-// name, phone number, email, password, confirm password
 
 const Signup = () => {
 

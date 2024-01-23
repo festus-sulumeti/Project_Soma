@@ -80,7 +80,7 @@ const Login = () => {
           />
           <div className="flex flex-col items-start">
             <Button asChild variant="link">
-              <Link to={"/signup"}>Don't have an account?</Link>
+              <Link to={''}>Forgot password?</Link>
             </Button>
             <Button type="submit">Login</Button>
           </div>
