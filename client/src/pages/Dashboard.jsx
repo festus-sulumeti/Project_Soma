@@ -2,8 +2,19 @@ import React, {useState, useEffect} from "react";
 import axios from "axios"; //use axiox for the retrieving of data to be searched from the backend api
 import { useAuthStore } from "@/store/authStore";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AccountSummary from "@/components/AccountSummary";
+import Sidebar from "@/components/Sidebar";
+import { Button } from "@/components/ui/button";
 import { UserAddOutlined } from "@ant-design/icons";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Sidebar from "@/components/Sidebar";
@@ -60,7 +71,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex items-start">
-        <Sidebar 
+      <Sidebar 
           selectedAccount={selectedAccount}
           selectedFilters={selectedFilters}
           onAccountChange={handleAccountChange}
@@ -110,6 +121,24 @@ const Dashboard = () => {
 
         {searchError && <p style={{ color: "red" }}>{searchError}</p>}
         {renderSearchResults(searchResults)}
+        <Dialog>
+          <DialogTrigger>
+            <Button className="mt-4">
+              <UserAddOutlined className="mr-2 w-4 h-4" /> Add child
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+
+        <AccountSummary />
       </div>
     </div>
   );
