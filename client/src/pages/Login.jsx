@@ -12,7 +12,9 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { CheckCircleIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login = () => {
   const loginSchema = z.object({
@@ -32,6 +34,12 @@ const Login = () => {
 
   const onSubmit = (values) => {
     console.log(values);
+
+    toast.success("Login successfull", {
+      position: "top-right",
+      icon:<CheckCircleIcon className="mr-2 h-4 w-4 text-green-600" />
+    });
+
   };
 
   return (
