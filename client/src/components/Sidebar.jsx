@@ -43,6 +43,9 @@ const Sidebar = () => {
                   <Checkbox id="grade-2" />
                   <label htmlFor="grade-2">Grade 2</label>
                 </div>
+
+                {/* the School planning and events */}
+                
               </AccordionContent>
             </AccordionItem>
           </AccordionContent>
