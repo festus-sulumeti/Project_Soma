@@ -44,13 +44,17 @@ const Sidebar = () => {
                   <label htmlFor="grade-2">Grade 2</label>
                 </div>
 
-                {/* the School planning and events */}
-                
+               
               </AccordionContent>
             </AccordionItem>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+
+       {/* the School planning and events */}
+
+        {/* End of the School planning and events */}
+
     </div>
   );
 };
