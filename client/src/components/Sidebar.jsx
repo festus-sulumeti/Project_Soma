@@ -9,12 +9,12 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "./ui/checkbox";
 
-const Sidebar = ({ selectedAccount, selectedFilters, onAccountChange, onFiltersChange }) => {
+const Sidebar = ({ selectedFilters, onAccountChange, onFiltersChange }) => {
   const [selectedRadio, setSelectedRadio] = useState("");
 
-  const handleRadioChange = (value) => {
-    setSelectedRadio(value);
-    onAccountChange(value); // Communicate selected radio value to Dashboard
+  const handleRadioChange = (account) => {
+    setSelectedRadio(account.id);// Assumming account has an id property
+    onAccountChange(account); // Communicate selected account to Dashboard
   };
 
   const handleCheckboxChange = (id) => {
@@ -62,7 +62,7 @@ const Sidebar = ({ selectedAccount, selectedFilters, onAccountChange, onFiltersC
                 <div className="ml-8 flex items-center gap-1">
                   <Checkbox 
                     id="grade-1" 
-                    value={selectedCheckboxes} 
+                    value={selectedFilters} 
                     onChange= {handleCheckboxChange}
                   />
                   <label htmlFor="grade-1">Grade 1</label>
@@ -70,7 +70,7 @@ const Sidebar = ({ selectedAccount, selectedFilters, onAccountChange, onFiltersC
                 <div className="ml-8 flex items-center gap-1">
                   <Checkbox 
                     id="grade-2"
-                    value={selectedCheckboxes} 
+                    value={selectedFilters} 
                     onChange= {handleCheckboxChange}
                   />
                   <label htmlFor="grade-2">Grade 2</label>

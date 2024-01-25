@@ -15,11 +15,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Sidebar from "@/components/Sidebar";
+
 
 const renderSearchResults = (results) => {
+  if (!Array.isArray(results)) {
+    // Handle the case where results is not an array
+    return <p></p>;
+  }
+
   return results.map((result) => (
     <div key={result.id}>{/* Rendering individual search result item */}</div>
   ));
@@ -38,17 +42,15 @@ const Dashboard = () => {
   useEffect(() => {
     // Add logic here to fetch and update search results based on selectedAccount and selectedFilters
     // You might want to use axios to fetch data from your API
-    const fetchData = async () => {
+  const fetchData = async () => {
       try {
         setSearchLoading(true);
-        // Example API endpoint, replace with your actual endpoint
         const response = await axios.get(`/api/search?q=${searchQuery}`);
+        console.log(response.data); // Log the response
         setSearchResults(response.data);
         setSearchError(null);
       } catch (error) {
-        console.error("Error searching:", error);
-        setSearchResults([]);
-        setSearchError("Error fetching search results. Please try again.");
+        // ...
       } finally {
         setSearchLoading(false);
       }
@@ -65,8 +67,19 @@ const Dashboard = () => {
     setSelectedFilters(filters);
   };
 
-  const handleSearch = () => {
-    // setSearchResults will be triggered by the useEffect
+  const handleSearch = async () => {
+    try {
+      setSearchLoading(true);
+      const response = await axios.get(`/api/search?q=${searchQuery}`);
+      setSearchResults(response.data);
+      setSearchError(null);
+    } catch (error) {
+      console.error("Error searching:", error);
+      setSearchResults([]);
+      setSearchError("Error fetching search results. Please try again.");
+    } finally {
+      setSearchLoading(false);
+    }
   };
 
   return (
@@ -83,11 +96,6 @@ const Dashboard = () => {
           <h2 className="font-semibold text-[19px]">Welcome, {user.name}</h2>
         </div>
         
-        <div className="py-8 ">
-          <Button className="flex " >
-            <UserAddOutlined className="mr-2 w-4 h-4" /> Add Student
-          </Button>
-        </div>
         <div className=" space-x-2 py-5 flex item-center pl-20 "  >
           <Input 
             type="text" 
