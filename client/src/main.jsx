@@ -1,20 +1,17 @@
+import { Toaster } from "@/components/ui/sonner";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./index.css";
-import Navbar from "./components/Navbar.jsx";
 import { BrowserRouter } from "react-router-dom";
-import { Toaster } from "@/components/ui/sonner";
-import Sidebar from "./components/Sidebar.jsx";
+import App from "./App.jsx";
+import Navbar from "./components/Navbar.jsx";
+import "./index.css";
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
-      <Navbar />
-      <div className="flex">
-        <Sidebar />
-        <App />
-      </div>
+      <Navbar/>
+      <App/>
       <Toaster />
     </BrowserRouter>
   </React.StrictMode>
