@@ -10,9 +10,12 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { CheckCircleIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 
 const Login = () => {
   const loginForm = useForm({
@@ -21,7 +24,6 @@ const Login = () => {
       password: ""
     }
   });
-
   const onSubmit = async (values) => {
     try {
       const response = await fetch('http://127.0.0.1:5000/login', {
