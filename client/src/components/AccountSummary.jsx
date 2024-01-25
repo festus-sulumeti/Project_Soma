@@ -4,11 +4,12 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
+import { useAccountStore } from "@/store/accountsStore";
 import { Link } from 'react-router-dom';
 
 
 const AccountSummary = () => {
-
+  const [students] = useAccountStore((state) => [state.students])
 
   return (
     <div className="mt-5 grid grid-cols-4 gap-4 *:cursor-pointer">
@@ -16,7 +17,7 @@ const AccountSummary = () => {
         <Card>
           <CardHeader>
             <CardTitle>Students</CardTitle>
-            <CardDescription>Number of students: 10000</CardDescription>
+            <CardDescription>Number of students: {students.length}</CardDescription>
           </CardHeader>
         </Card>
       </Link>
