@@ -11,8 +11,8 @@ class StudentModel(db.Model):
     gender = db.Column(db.String, nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=False)
     class_name = db.Column(db.String(25), db.ForeignKey('classes.name'), nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
     student_grades = db.relationship('GradeModel', backref='student')
 
@@ -27,8 +27,8 @@ class ParentModel(db.Model):
     gender = db.Column(db.String, nullable=False)
     phone_number = db.Column(db.String(25), nullable=False)
     email = db.Column(db.String(50), nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
     student_parent = db.relationship('StudentModel', backref='parent')
 
@@ -42,9 +42,8 @@ class TeacherModel(db.Model):
     phone_number = db.Column(db.String(25), nullable=False)
     email = db.Column(db.String(50), nullable=False)
     role = db.Column(db.String(25), nullable=False)
-    password = db.Column(db.String(128), nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
     
 class ClassModel(db.Model):
@@ -53,8 +52,8 @@ class ClassModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
     class_students = db.relationship('StudentModel', backref='class')
     class_teacher = db.relationship('TeacherModel', backref='class')
@@ -72,8 +71,8 @@ class GradeModel(db.Model):
     social_studies = db.Column(db.Integer, nullable=False)
     religious_education = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
    
 

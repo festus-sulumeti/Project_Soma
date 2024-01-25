@@ -22,6 +22,7 @@ class Teacher(Resource):
     parser.add_argument('email', required=True, help="Email address is required")
     parser.add_argument('role', required=True, help="Role is required")
     
+    
 
     @marshal_with(resource_fields)
     def get(self, id=None):
@@ -33,6 +34,10 @@ class Teacher(Resource):
             teachers = TeacherModel.query.all()
 
             return teachers
+
+    # Get a count of teachers
+    # def get(self):
+    #     pass
         
 
     def post(self):
@@ -44,7 +49,8 @@ class Teacher(Resource):
             db.session.commit()
 
             return {"message": "Teacher added successfully", "status": "success"}
-        except:
+        except Exception as e:
+            # print(f"An error occurred: {e}")
             return {"message": "Unable to add teacher", "status": "fail"}
         
     def delete(self, id):
@@ -59,4 +65,25 @@ class Teacher(Resource):
                 return {"message": "Teacher not found", "status": "fail"}
         except:
             return {"message": "Unable to delete teacher", "status": "fail"}
+
+    # def patch(self, id):
+    #     if id:
+    #         teacher = TeacherModel.query.filter_by(id=id).first()
+
+    #         if teacher:
+    #             data = Teacher.parser.parse_args()
+
+    #             for key, value in data.items():
+    #                 if value is not None:
+    #                     setattr(teacher, key, value)
+                
+    #             try:
+    #                 db.session.commit()
+    #                 return {"message": "Teacher updated successfully", "status": "success"}
+    #             except Exception as e:
+    #                 print(f"An error occurred: {e}")
+    #                 db.session.rollback()
+    #                 return {"message": "Unable to update teacher", "status": "fail"}
+    #     else:
+    #         return {"message": "Teacher not found", "status": "fail"}
 
