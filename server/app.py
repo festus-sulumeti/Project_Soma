@@ -1,11 +1,11 @@
 
-from flask import Flask, request, jsonify
+from flask import Flask, make_response, jsonify, request
+from models import Student, db
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
 from resources.teachers import Teacher
 
-from models import db
 
 
 app = Flask(__name__)
@@ -47,6 +47,58 @@ def login():
     else:
         return jsonify({"success": False, "message": "Invalid credentials"}), 401
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route("/students", methods=['GET', 'POST'])
+def all_students():
+    if request.method == 'GET':
+        get_students=[student.to_dict() for student in Student.query.all()]
+
+        response= make_response(jsonify(get_students), 200)
+
+        return response
+
+    elif request.method == 'POST':
+        data = request.get_json()
+        
+
+        new_student=Student(**data)
+
+        db.session.add(new_student)
+        db.session.commit()
+
+        new_dict = new_student.to_dict()
+
+        response = make_response(jsonify(new_dict), 200)
+
+        return response
+    
+    else:
+        return f"Error erfoming action"
+    
+@app.route('/students/<int:id>', methods=['DELETE', 'PATCH'])
+def get_student(id):
+    student = Student.query.filter_by(id = id).first()
+
+    if request.method == 'PATCH':
+        for attr, value in request.form.items():
+            setattr(student, attr, value)
+
+        db.session.commit()
+        
+        new_dict = student.to_dict()
+
+        response = make_response(jsonify(new_dict), 200)
+
+        return response
+    
+    elif request.method == 'DELETE':
+        db.session.delete(student)
+        db.session.commit()
+
+        return jsonify({"message": "Student deleted succesfully"})
+
+
+
+if __name__ == "__main__":
+    app.run(port=5555, debug=True)
+=======
 

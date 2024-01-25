@@ -1,8 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import validates
+from sqlalchemy_serializer import SerializerMixin
 
 db = SQLAlchemy()
 
-class StudentModel(db.Model):
+class StudentModel(db.Model, SerializerMixin):
     __tablename__ = 'students'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +17,19 @@ class StudentModel(db.Model):
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
     student_grades = db.relationship('GradeModel', backref='student')
+    
+    @validates('first_name', "last_name")
+    def name_validation(self, key, value  ):
+        if len(value) < 2:
+            raise ValueError(f'{key} is too short ')
+        
+        if not value.isalpha():
+            raise ValueError(f'{key} must be alphabets')
+        
+        return value
+        
+    def __repr__(self):
+        return f'<Student:{self.first_name} {self.last_name}> '
 
    
 
@@ -74,18 +89,4 @@ class GradeModel(db.Model):
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
-   
-
-
     
-
-    
-
-
-
-
-
-
-
-
-
