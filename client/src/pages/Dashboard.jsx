@@ -19,95 +19,60 @@ import CreateAccount from "@/components/CreateAccount";
 import { Input } from "@/components/ui/input";
 
 
-const renderSearchResults = (results) => {
-  if (!Array.isArray(results)) {
-    // Handle the case where results is not an array
-    return <p></p>;
-  }
+// const renderSearchResults = (results) => {
+//   if (!Array.isArray(results)) {
+//     // Handle the case where results is not an array
+//     return <p></p>;
+//   }
 
-  return results.map((result) => (
-    <div key={result.id}>{/* Rendering individual search result item */}</div>
-  ));
-};
+//   return results.map((result) => (
+//     <div key={result.id}>{/* Rendering individual search result item */}</div>
+//   ));
+// };
 
 const Dashboard = () => {
   const { user } = useAuthStore();
 
-  const [selectedAccount, setSelectedAccount] = useState(null);
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchLoading, setSearchLoading] = useState(false);
-  const [searchError, setSearchError] = useState(null);
+  // const [searchQuery, setSearchQuery] = useState("");
+  // const [searchResults, setSearchResults] = useState([]);
+  // const [searchLoading, setSearchLoading] = useState(false);
+  // const [searchError, setSearchError] = useState(null);
 
-  useEffect(() => {
-    // Add logic here to fetch and update search results based on selectedAccount and selectedFilters
-    // You might want to use axios to fetch data from your API
-  const fetchData = async () => {
-      try {
-        setSearchLoading(true);
-        const response = await axios.get(`/api/search?q=${searchQuery}`);
-        console.log(response.data); // Log the response
-        setSearchResults(response.data);
-        setSearchError(null);
-      } catch (error) {
-        // ...
-      } finally {
-        setSearchLoading(false);
-      }
-    };
 
-    fetchData();
-  }, [selectedAccount, selectedFilters, searchQuery]);
-
-  const handleAccountChange = (account) => {
-    setSelectedAccount(account);
-  };
-
-  const handleFiltersChange = (filters) => {
-    setSelectedFilters(filters);
-  };
-
-  const handleSearch = async () => {
-    try {
-      setSearchLoading(true);
-      const response = await axios.get(`/api/search?q=${searchQuery}`);
-      setSearchResults(response.data);
-      setSearchError(null);
-    } catch (error) {
-      console.error("Error searching:", error);
-      setSearchResults([]);
-      setSearchError("Error fetching search results. Please try again.");
-    } finally {
-      setSearchLoading(false);
-    }
-  };
+  // const handleSearch = async () => {
+  //   // try {
+  //   //   setSearchLoading(true);
+  //   //   const response = await axios.get(`/api/search?q=${searchQuery}`);
+  //   //   setSearchResults(response.data);
+  //   //   setSearchError(null);
+  //   // } catch (error) {
+  //   //   console.error("Error searching:", error);
+  //   //   setSearchResults([]);
+  //   //   setSearchError("Error fetching search results. Please try again.");
+  //   // } finally {
+  //   //   setSearchLoading(false);
+  //   // }
+  // };
 
   return (
     <div className="flex items-start">
-      <Sidebar 
-          selectedAccount={selectedAccount}
-          selectedFilters={selectedFilters}
-          onAccountChange={handleAccountChange}
-          onFiltersChange={handleFiltersChange}
-        />
-      <div className="pl-14 flex-1 pt-6">
+      <div className="pl-4 flex-1 pt-6">
         <div className="flex items-center justify-between">
           <h1 className="font-bold text-[36px]">Dashboard</h1>
           <h2 className="font-semibold text-[19px]">Welcome, {user.name}</h2>
         </div>
         
-        <div className=" space-x-2 py-5 flex item-center pl-20 "  >
+        <div className="space-x-2 py-5 flex item-center"  >
           <Input 
             type="text" 
-            className="px-5 py-4 w-99 " 
+            className="px-5 py-4 w-96" 
             placeholder="Search on Soma..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            // value={searchQuery}
+            // onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Button 
             className="px-3 py-2" 
-            onClick={handleSearch}
+            // onClick={handleSearch}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -126,14 +91,14 @@ const Dashboard = () => {
 
           </Button>
         </div>
-        {searchLoading && <p> Loading... </p>}
+        {/* {searchLoading && <p> Loading... </p>}
 
         {searchError && <p style={{ color: "red" }}>{searchError}</p>}
-        {renderSearchResults(searchResults)}
+        {renderSearchResults(searchResults)} */}
         <Dialog>
           <DialogTrigger>
             <Button className="mt-4">
-              <UserAddOutlined className="mr-2 w-4 h-4" /> Add child
+              <UserAddOutlined className="mr-2 w-4 h-4" /> Add account
             </Button>
           </DialogTrigger>
           <DialogContent>
