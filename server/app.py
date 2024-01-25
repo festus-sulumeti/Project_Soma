@@ -1,6 +1,8 @@
 from flask import Flask, make_response, jsonify, request
 from models import StudentModel, db
 from flask_cors import CORS
+import jwt
+from datetime import datetime, timedelta
 from flask_migrate import Migrate
 from flask_restful import Api
 from resources.teachers import Teacher
@@ -13,33 +15,24 @@ migrate = Migrate(app, db)
 db.init_app(app)
 api = Api(app)
 CORS(app)
+SECRET_KEY = '4567'  # Replace with a secure secret key
 
 @app.route("/")
 def index():
     return "<h1>Welcome to Soma!</h1>"
 
-
 api.add_resource(Teacher, '/teacher', '/teacher/<int:id>') 
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/login', methods=['POST'])
 def login():
     data = request.json
 
-    # Check if 'email' and 'password' are present in the request data
-    if 'email' not in data or 'password' not in data:
-        return jsonify({"error": "Invalid request"}), 400
-
-    # Check if 'email' is a valid email address
-    if '@' not in data['email']:
-        return jsonify({"error": "Invalid email address"}), 400
-
-    # Check if 'password' has at least 6 characters
-    if len(data['password']) < 6:
-        return jsonify({"error": "Password must be at least 6 characters"}), 400
-
     # Check login credentials
     if data['email'] == 'admin@gmail.com' and data['password'] == 'password':
-        return jsonify({"success": True, "message": "Login successful"}), 200
+        expiration_time = datetime.utcnow() + timedelta(hours=1)
+        token = jwt.encode({'email': data['email'], 'exp': expiration_time}, SECRET_KEY, algorithm='HS256')
+
+        return jsonify({"success": True, "message": "Login successful", "token": token}), 200
     else:
         return jsonify({"success": False, "message": "Invalid credentials"}), 401
 
@@ -124,5 +117,3 @@ def remove_parent(parent_id):
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
-
-
