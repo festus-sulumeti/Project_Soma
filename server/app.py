@@ -1,6 +1,6 @@
 
 from flask import Flask, make_response, jsonify, request
-from models import Student, db
+from models import StudentModel, db
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
@@ -50,7 +50,7 @@ def login():
 @app.route("/students", methods=['GET', 'POST'])
 def all_students():
     if request.method == 'GET':
-        get_students=[student.to_dict() for student in Student.query.all()]
+        get_students=[student.to_dict() for student in StudentModel.query.all()]
 
         response= make_response(jsonify(get_students), 200)
 
@@ -60,7 +60,7 @@ def all_students():
         data = request.get_json()
         
 
-        new_student=Student(**data)
+        new_student=StudentModel(**data)
 
         db.session.add(new_student)
         db.session.commit()
@@ -76,7 +76,7 @@ def all_students():
     
 @app.route('/students/<int:id>', methods=['DELETE', 'PATCH'])
 def get_student(id):
-    student = Student.query.filter_by(id = id).first()
+    student = StudentModel.query.filter_by(id = id).first()
 
     if request.method == 'PATCH':
         for attr, value in request.form.items():
@@ -100,5 +100,5 @@ def get_student(id):
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
-=======
+
 
