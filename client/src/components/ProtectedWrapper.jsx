@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/store/authStore";
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 const ProtectedWrapper = () => {
   const { user } = useAuthStore();
@@ -12,7 +13,10 @@ const ProtectedWrapper = () => {
 
   return (
     <div className="px-14">
-      <Outlet />
+      <div className="flex">
+        <Sidebar />
+        <Outlet />
+      </div>
     </div>
   );
 };
