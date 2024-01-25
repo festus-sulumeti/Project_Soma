@@ -1,28 +1,23 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import jwt
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 CORS(app)
+SECRET_KEY = '4567'  # Replace with a secure secret key
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/login', methods=['POST'])
 def login():
     data = request.json
 
-    # Check if 'email' and 'password' are present in the request data
-    if 'email' not in data or 'password' not in data:
-        return jsonify({"error": "Invalid request"}), 400
-
-    # Check if 'email' is a valid email address
-    if '@' not in data['email']:
-        return jsonify({"error": "Invalid email address"}), 400
-
-    # Check if 'password' has at least 6 characters
-    if len(data['password']) < 6:
-        return jsonify({"error": "Password must be at least 6 characters"}), 400
-
     # Check login credentials
     if data['email'] == 'admin@gmail.com' and data['password'] == 'password':
-        return jsonify({"success": True, "message": "Login successful"}), 200
+        # Create JWT token
+        expiration_time = datetime.utcnow() + timedelta(hours=1)
+        token = jwt.encode({'email': data['email'], 'exp': expiration_time}, SECRET_KEY, algorithm='HS256')
+
+        return jsonify({"success": True, "message": "Login successful", "token": token}), 200
     else:
         return jsonify({"success": False, "message": "Invalid credentials"}), 401
 

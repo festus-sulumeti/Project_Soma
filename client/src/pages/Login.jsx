@@ -37,8 +37,12 @@ const Login = () => {
       // Handle the response data accordingly
       if (data.success) {
         // Login successful, show success toast
-        toast.success('Login successful');
-        console.log('Login successful');
+        // toast.success('Login successful');
+        // console.log('Login successful');
+        localStorage.setItem('token', data.token);
+
+        // Redirect to dashboard
+        window.location.href = '/dashboard';
       } else {
         // Login failed, show error toast
         toast.error('Login failed: ${data.message}');
