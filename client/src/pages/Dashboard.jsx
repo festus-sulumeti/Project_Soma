@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios"; //use axiox for the retrieving of data to be searched from the backend api
 import { useAuthStore } from "@/store/authStore";
 
@@ -17,7 +17,8 @@ import {
 import CreateAccount from "@/components/CreateAccount";
 
 import { Input } from "@/components/ui/input";
-
+import { useAccountStore } from "@/store/accountsStore";
+import { BASE_URL } from "@/lib/utils";
 
 // const renderSearchResults = (results) => {
 //   if (!Array.isArray(results)) {
@@ -32,12 +33,17 @@ import { Input } from "@/components/ui/input";
 
 const Dashboard = () => {
   const { user } = useAuthStore();
+  const [students, setStudents, classes, setClasses] = useAccountStore((state) => [
+    state.students,
+    state.setStudents,
+    state.classes,
+    state.setClasses
+  ]);
 
   // const [searchQuery, setSearchQuery] = useState("");
   // const [searchResults, setSearchResults] = useState([]);
   // const [searchLoading, setSearchLoading] = useState(false);
   // const [searchError, setSearchError] = useState(null);
-
 
   // const handleSearch = async () => {
   //   // try {
@@ -54,6 +60,18 @@ const Dashboard = () => {
   //   // }
   // };
 
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/students`)
+      .then((response) => setStudents(response.data));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/classes`)
+      .then((response) => setClasses(response.data));
+  }, []);
+
   return (
     <div className="flex items-start">
       <div className="pl-4 flex-1 pt-6">
@@ -61,17 +79,17 @@ const Dashboard = () => {
           <h1 className="font-bold text-[36px]">Dashboard</h1>
           <h2 className="font-semibold text-[19px]">Welcome, {user.name}</h2>
         </div>
-        
-        <div className="space-x-2 py-5 flex item-center"  >
-          <Input 
-            type="text" 
-            className="px-5 py-4 w-96" 
-            placeholder="Search on Soma..." 
+
+        <div className="space-x-2 py-5 flex item-center">
+          <Input
+            type="text"
+            className="px-5 py-4 w-96"
+            placeholder="Search on Soma..."
             // value={searchQuery}
             // onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Button 
-            className="px-3 py-2" 
+          <Button
+            className="px-3 py-2"
             // onClick={handleSearch}
           >
             <svg
@@ -88,7 +106,6 @@ const Dashboard = () => {
                 d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
               />
             </svg>
-
           </Button>
         </div>
         {/* {searchLoading && <p> Loading... </p>}
@@ -102,7 +119,7 @@ const Dashboard = () => {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <CreateAccount/>
+            <CreateAccount />
           </DialogContent>
         </Dialog>
         <AccountSummary />
