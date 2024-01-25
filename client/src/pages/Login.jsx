@@ -1,7 +1,5 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,32 +12,45 @@ import {
 import { Input } from "@/components/ui/input";
 import { CheckCircleIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { toast } from "sonner";
 
 const Login = () => {
-  const loginSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6, {
-      message: "Password must be at least 6 characters.",
-    }),
-  }).required();
-
   const loginForm = useForm({
-    resolver: zodResolver(loginSchema),
-    defaultValues:{
-      email:"",
-      password:""
+    defaultValues: {
+      email: "",
+      password: ""
     }
   });
+  const onSubmit = async (values) => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
 
-  const onSubmit = (values) => {
-    console.log(values);
+      const data = await response.json();
 
-    toast.success("Login successfull", {
-      position: "top-right",
-      icon:<CheckCircleIcon className="mr-2 h-4 w-4 text-green-600" />
-    });
-
+      // Handle the response data accordingly
+      if (data.success) {
+        // Login successful, show success toast
+        toast.success('Login successful');
+        console.log('Login successful');
+      } else {
+        // Login failed, show error toast
+        toast.error('Login failed: ${data.message}');
+        console.error('Login failed:', data.message);
+      }
+    } catch (error) {
+      // Error during login, show error toast
+      toast.error('Error during login');
+      console.error('Error during login:', error);
+    }
   };
 
   return (
@@ -59,9 +70,6 @@ const Login = () => {
                 <FormControl>
                   <Input placeholder="johndoe@gmail.com" {...field} />
                 </FormControl>
-                {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -79,9 +87,6 @@ const Login = () => {
                     {...field}
                   />
                 </FormControl>
-                {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -94,6 +99,8 @@ const Login = () => {
           </div>
         </form>
       </Form>
+      {/* Toast container for displaying notifications */}
+      <ToastContainer />
     </div>
   );
 };
