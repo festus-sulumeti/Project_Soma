@@ -42,6 +42,16 @@ const AccountSummary = () => {
           </CardDescription>
         </CardHeader>
       </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            Events
+          </CardTitle>
+          <CardDescription>
+            Number of upcoming events: 10000
+          </CardDescription>
+        </CardHeader>
+      </Card>
     </div>
   );
 }
