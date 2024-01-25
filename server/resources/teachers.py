@@ -6,7 +6,7 @@ resource_fields = {
     'first_name': fields.String,
     'last_name': fields.String,
     'gender': fields.String,
-    'phone': fields.String,
+    'phone_number': fields.String,
     'email': fields.String,
     'role': fields.String,
     'created_at': fields.DateTime,
@@ -18,7 +18,7 @@ class Teacher(Resource):
     parser.add_argument('first_name', required=True, help="First name is required")
     parser.add_argument('last_name', required=True, help="Last name is required")
     parser.add_argument('gender', required=True, help="Gender is required")
-    parser.add_argument('phone', required=True, help="Phone number is required")
+    parser.add_argument('phone_number', required=True, help="Phone number is required")
     parser.add_argument('email', required=True, help="Email address is required")
     parser.add_argument('role', required=True, help="Role is required")
     

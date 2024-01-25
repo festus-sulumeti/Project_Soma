@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_migrate import Migrate
-from flask_restful import Api, Resource
+from flask_restful import Api
 from resources.teachers import Teacher
 
 from models import db
@@ -20,4 +20,5 @@ api = Api(app)
 def index():
     return "<h1>Welcome to Soma!</h1>"
 
-api.add_resource(Teacher, '/teacher', '/teacher<int:id>') 
+
+api.add_resource(Teacher, '/teacher', '/teacher/<int:id>') 

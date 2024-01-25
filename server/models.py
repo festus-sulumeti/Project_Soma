@@ -14,7 +14,7 @@ class StudentModel(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    student_grades = db.relationship('Grade', backref='student')
+    student_grades = db.relationship('GradeModel', backref='student')
 
    
 
@@ -30,7 +30,7 @@ class ParentModel(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    student_parent = db.relationship('Student', backref='parent')
+    student_parent = db.relationship('StudentModel', backref='parent')
 
 class TeacherModel(db.Model):
     __tablename__ = 'teachers'
@@ -56,8 +56,8 @@ class ClassModel(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    class_students = db.relationship('Student', backref='class')
-    class_teacher = db.relationship('Teacher', backref='class')
+    class_students = db.relationship('StudentModel', backref='class')
+    class_teacher = db.relationship('TeacherModel', backref='class')
 
 
 class GradeModel(db.Model):
@@ -75,7 +75,7 @@ class GradeModel(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    student = db.relationship('Student', backref='grades')
+   
 
 
     
