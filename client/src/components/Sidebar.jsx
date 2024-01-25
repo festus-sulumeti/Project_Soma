@@ -14,7 +14,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="border-r border-r-gray-300 h-screen py-4 pl-14 pr-20">
+    <div className="border-r border-r-gray-300 h-screen py-4 pr-8">
       <h2
         className={`text-[22px] font-medium ${
           pathname === "/dashboard" && "text-blue-600"
@@ -72,7 +72,11 @@ const Sidebar = () => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="school-planning">
-          <AccordionTrigger className="text-[24px] text-nowrap">
+          <AccordionTrigger
+            className={`text-[24px] text-nowrap  ${
+              pathname.includes("school") && "text-blue-600"
+            }`}
+          >
             School Planning
           </AccordionTrigger>
           <AccordionContent className="ml-6">

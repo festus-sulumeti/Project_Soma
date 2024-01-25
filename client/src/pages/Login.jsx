@@ -15,18 +15,32 @@ import { Link } from "react-router-dom";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { toast } from "sonner";
+// import { toast } from "sonner";
+import { BASE_URL } from "@/lib/utils";
+import {z} from 'zod'
+import {zodResolver} from '@hookform/resolvers/zod'
 
 const Login = () => {
+  const loginSchema = z
+    .object({
+      email: z.string().email(),
+      password: z.string().min(6, {
+        message: "Password must be at least 6 characters.",
+      }),
+    })
+    .required();
+
   const loginForm = useForm({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
-      password: ""
-    }
+      password: "",
+    },
   });
+
   const onSubmit = async (values) => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/login', {
+      const response = await fetch(`${BASE_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,10 +54,9 @@ const Login = () => {
       if (data.success) {
         // Login successful, show success toast
         toast.success('Login successful');
-        console.log('Login successful');
       } else {
         // Login failed, show error toast
-        toast.error('Login failed: ${data.message}');
+        toast.error(`Login failed: ${data.message}`);
         console.error('Login failed:', data.message);
       }
     } catch (error) {
@@ -54,7 +67,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center pl-14">
       <h1 className="text-[28px] font-bold">Login into your account</h1>
       <Form {...loginForm}>
         <form
