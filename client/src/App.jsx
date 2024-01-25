@@ -10,8 +10,7 @@ function App() {
     <main className="pb-10">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-       
+        <Route path="/login" element={<Login />} />    
         <Route element={<ProtectedWrapper/>}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
