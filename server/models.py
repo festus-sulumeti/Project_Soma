@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
+from sqlalchemy import func
 from sqlalchemy_serializer import SerializerMixin
 
 db = SQLAlchemy()
@@ -46,6 +47,7 @@ class ParentModel(db.Model):
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
     student_parent = db.relationship('StudentModel', backref='parent')
+
 
 class TeacherModel(db.Model):
     __tablename__ = 'teachers'

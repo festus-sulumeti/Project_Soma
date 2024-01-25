@@ -93,6 +93,34 @@ def get_student(id):
         return jsonify({"message": "Student deleted succesfully"})
 
 
+# New routes for parents
+@app.route('/add_parent', methods=['POST'])
+def add_parent():
+    data = request.get_json()
+
+    new_parent = ParentModel(
+        first_name=data['first_name'],
+        last_name=data['last_name'],
+        phone_number=data['phone_number'],
+        email=data['email'],
+        gender=data['gender']
+    )
+
+    db.session.add(new_parent)
+    db.session.commit()
+
+    return jsonify({'message': 'Parent added successfully'}), 201
+
+@app.route('/remove_parent/<int:parent_id>', methods=['DELETE'])
+def remove_parent(parent_id):
+    parent = ParentModel.query.get(parent_id)
+
+    if parent:
+        db.session.delete(parent)
+        db.session.commit()
+        return jsonify({'message': 'Parent removed successfully'}), 200
+    else:
+        return jsonify({'message': 'Parent not found'}), 404
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
