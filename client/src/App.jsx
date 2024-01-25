@@ -1,11 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import ProtectedWrapper from "./components/ProtectedWrapper";
+import Accounts from "./pages/Accounts";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Accounts from "./pages/Accounts";
 import SchoolPlanning from "./pages/SchoolPlanning";
-import Sidebar from "./components/Sidebar";
 
 
 function App() {

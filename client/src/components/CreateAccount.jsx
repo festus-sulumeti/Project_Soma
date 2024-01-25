@@ -18,6 +18,7 @@ const CreateAccount = () => {
     "teacher":<TeacherAccountForm/>,
     "student":<StudentAccountForm/>
   }
+  
 
   return (
     <div className="flex flex-col items-center justify-center">
