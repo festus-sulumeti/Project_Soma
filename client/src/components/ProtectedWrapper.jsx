@@ -9,7 +9,7 @@ const ProtectedWrapper = () => {
 
   useEffect(() => {
     if (!user) navigate("/login");
-  }, [user]);
+  }, []);
 
   return (
     <div className="px-14">

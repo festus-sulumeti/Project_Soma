@@ -1,24 +1,16 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios"; //use axiox for the retrieving of data to be searched from the backend api
 import { useAuthStore } from "@/store/authStore";
+import { api } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 import AccountSummary from "@/components/AccountSummary";
-import Sidebar from "@/components/Sidebar";
-import { Button } from "@/components/ui/button";
-import { UserAddOutlined } from "@ant-design/icons";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import CreateAccount from "@/components/CreateAccount";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { UserAddOutlined } from "@ant-design/icons";
 
 import { Input } from "@/components/ui/input";
 import { useAccountStore } from "@/store/accountsStore";
-import { BASE_URL } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 // const renderSearchResults = (results) => {
 //   if (!Array.isArray(results)) {
@@ -32,13 +24,21 @@ import { BASE_URL } from "@/lib/utils";
 // };
 
 const Dashboard = () => {
-  const { user } = useAuthStore();
-  const [students, setStudents, classes, setClasses] = useAccountStore((state) => [
-    state.students,
-    state.setStudents,
-    state.classes,
-    state.setClasses
-  ]);
+  const { user, setUser, setIsAuthenticated } = useAuthStore();
+  const [students, setStudents, classes, setClasses] = useAccountStore(
+    (state) => [
+      state.students,
+      state.setStudents,
+      state.classes,
+      state.setClasses,
+    ]
+  );
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!user) navigate('/login')
+  },[user])
 
   // const [searchQuery, setSearchQuery] = useState("");
   // const [searchResults, setSearchResults] = useState([]);
@@ -60,24 +60,35 @@ const Dashboard = () => {
   //   // }
   // };
 
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/students`)
-      .then((response) => setStudents(response.data));
-  }, []);
+  // useEffect(() => {
+  //   api
+  //     .get(`/students`)
+  //     .then((response) => setStudents(response.data));
+  // }, []);
+
+  // useEffect(() => {
+  //   api
+  //     .get(`/classes`)
+  //     .then((response) => setClasses(response.data));
+  // }, []);
+
+  // const [properties, setProperties] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/classes`)
-      .then((response) => setClasses(response.data));
+    api
+      .get("http://localhost:5000/property")
+      .then((res) => console.log(res.data));
   }, []);
+
 
   return (
     <div className="flex items-start">
       <div className="pl-4 flex-1 pt-6">
         <div className="flex items-center justify-between">
           <h1 className="font-bold text-[36px]">Dashboard</h1>
-          <h2 className="font-semibold text-[19px]">Welcome, {user.name}</h2>
+          {user && (<h2 className="font-semibold text-[19px]">
+            Welcome, {user.first_name} {user.last_name}
+          </h2>)}
         </div>
 
         <div className="space-x-2 py-5 flex item-center">
