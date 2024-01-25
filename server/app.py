@@ -1,12 +1,9 @@
-
 from flask import Flask, make_response, jsonify, request
 from models import StudentModel, db
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
 from resources.teachers import Teacher
-
-
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///soma.db'
@@ -16,7 +13,6 @@ migrate = Migrate(app, db)
 db.init_app(app)
 api = Api(app)
 CORS(app)
-
 
 @app.route("/")
 def index():
@@ -72,7 +68,7 @@ def all_students():
         return response
     
     else:
-        return f"Error erfoming action"
+        return f"Error perfoming action"
     
 @app.route('/students/<int:id>', methods=['DELETE', 'PATCH'])
 def get_student(id):
