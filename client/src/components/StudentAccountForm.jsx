@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -21,6 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAccountStore } from "@/store/accountsStore";
+
+import axios from "axios";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { BASE_URL } from "@/lib/utils";
 
 const createStudentAccountSchema = z.object({
   first_name: z.string().min(2, {
@@ -29,11 +35,13 @@ const createStudentAccountSchema = z.object({
   last_name: z.string().min(2, {
     message: "Last name must be at least 2 characters.",
   }),
-  class_id: z.number({
+  class_name: z.string({
     required_error: "Please select a class",
     invalid_type_error: "Please select a valid class",
   }),
-  parent_id: z.optional(z.nullable(z.number())),
+  parent_id: z.number().int().positive({
+    message: "Parent ID must be a positive number",
+  }),
   gender: z.nativeEnum(["Female", "Male"], {
     errorMap: (issue, ctx) => {
       return { message: "Please select the gender" };
@@ -42,18 +50,8 @@ const createStudentAccountSchema = z.object({
 });
 
 const StudentAccountForm = () => {
-  const classes = [
-    {
-      id: 1,
-      name: "Grade 1",
-      teacher_id: 101,
-    },
-    {
-      id: 2,
-      name: "Grade 2",
-      teacher_id: 102,
-    },
-  ];
+  const [classes] = useAccountStore((state) => [state.classes]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const parents = [
     {
@@ -73,14 +71,23 @@ const StudentAccountForm = () => {
     defaultValues: {
       first_name: "",
       last_name: "",
-      class_id: "",
-      parent_id: null,
+      class_name: "",
       gender: "",
+      parent_id: 2,
     },
   });
 
   function onSubmit(values) {
-    console.log(values);
+    setIsLoading(true);
+    try {
+      axios.post(`${BASE_URL}/students`, values).then((response) => {
+        toast.success(response.data.message);
+        setIsLoading(false);
+        form.reset();
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
   }
 
   return (
@@ -145,7 +152,7 @@ const StudentAccountForm = () => {
           />
           <FormField
             control={form.control}
-            name="class_id"
+            name="class_name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Class</FormLabel>
@@ -160,7 +167,9 @@ const StudentAccountForm = () => {
                   </FormControl>
                   <SelectContent>
                     {classes.map(({ id, name }) => (
-                      <SelectItem value={id}>{name}</SelectItem>
+                      <SelectItem key={id} value={name}>
+                        {name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -174,18 +183,17 @@ const StudentAccountForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Parent</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={2}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a parent" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {parents.map(({id, first_name, last_name}) => (
-                      <SelectItem value={id}>{first_name} {last_name}</SelectItem>
+                    {parents.map(({ id, first_name, last_name }) => (
+                      <SelectItem key={id} value={parseInt(id)}>
+                        {first_name} {last_name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -194,7 +202,10 @@ const StudentAccountForm = () => {
             )}
           />
           <div className="flex flex-col items-start">
-            <Button type="submit">Create an account</Button>
+            <Button type="submit" disabled={isLoading}>
+              {" "}
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>} Create an account
+            </Button>
           </div>
         </form>
       </Form>
