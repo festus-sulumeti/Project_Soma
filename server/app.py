@@ -1,104 +1,115 @@
-
-from flask import Flask, make_response, jsonify, request
-from models import StudentModel, db
-from flask_cors import CORS
-from flask_migrate import Migrate
-from flask_restful import Api
-from resources.teachers import Teacher
-
-
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///soma.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///grades.db'
+db = SQLAlchemy(app)
 
-migrate = Migrate(app, db)
-db.init_app(app)
-api = Api(app)
-CORS(app)
-
-
+ # simple route for the root URL
 @app.route("/")
-def index():
-    return "<h1>Welcome to Soma!</h1>"
+def home():
+    return jsonify({"message": "Welcome to the home page"})
 
 
-api.add_resource(Teacher, '/teacher', '/teacher/<int:id>') 
+@app.route("/grades", methods=["POST", "GET"])
+def manage_grades():
+    if request.method == "POST":
+        data = request.json
 
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    data = request.json
+        # Extract data from the request
+        student_id = data.get("student_id")
+        math = data.get("math")
+        english = data.get("english")
+        kiswahili = data.get("kiswahili")
+        social_studies = data.get("social_studies")
+        religious_education = data.get("religious_education")
 
-    # Check if 'email' and 'password' are present in the request data
-    if 'email' not in data or 'password' not in data:
-        return jsonify({"error": "Invalid request"}), 400
+        # Compute grades based on percentages
+        math_grade = compute_grade(math)
+        english_grade = compute_grade(english)
+        kiswahili_grade = compute_grade(kiswahili)
+        social_studies_grade = compute_grade(social_studies)
+        religious_education_grade = compute_grade(religious_education)
 
-    # Check if 'email' is a valid email address
-    if '@' not in data['email']:
-        return jsonify({"error": "Invalid email address"}), 400
+        # Compute total
+        total = math + english + kiswahili + social_studies + religious_education
 
-    # Check if 'password' has at least 6 characters
-    if len(data['password']) < 6:
-        return jsonify({"error": "Password must be at least 6 characters"}), 400
+        # Get current timestamp
+        current_time = datetime.utcnow()
 
-    # Check login credentials
-    if data['email'] == 'admin@gmail.com' and data['password'] == 'password':
-        return jsonify({"success": True, "message": "Login successful"}), 200
+        # Create a new Grades object
+        new_grades = Grades(
+            student_id=student_id,
+            math=math,
+            english=english,
+            kiswahili=kiswahili,
+            social_studies=social_studies,
+            religious_education=religious_education,
+            total=total,
+            created_at=current_time,
+            updated_at=current_time
+        )
+
+        # Add the new grades to the database
+        db.session.add(new_grades)
+        db.session.commit()
+
+        return jsonify({"message": "Grades recorded successfully"})
+
+    elif request.method == "GET":
+        # Retrieve all grades from the database
+        all_grades = Grades.query.all()
+        grades_list = []
+
+        # Format the grades data for response
+        for grades in all_grades:
+            grades_data = {
+                "id": grades.id,
+                "student_id": grades.student_id,
+                "math": grades.math,
+                "english": grades.english,
+                "kiswahili": grades.kiswahili,
+                "social_studies": grades.social_studies,
+                "religious_education": grades.religious_education,
+                "total": grades.total,
+                "created_at": grades.created_at,
+                "updated_at": grades.updated_at
+            }
+            grades_list.append(grades_data)
+
+        return jsonify({"grades": grades_list})
+
+def compute_grade(percentage):
+    # My grading logic 
+    if percentage >= 90:
+        return "A"
+    elif 80 <= percentage < 90:
+        return "B"
+    elif 70 <= percentage < 80:
+        return "C"
+    elif 60 <= percentage < 70:
+        return "D"
     else:
-        return jsonify({"success": False, "message": "Invalid credentials"}), 401
+        return "F"
 
-@app.route("/students", methods=['GET', 'POST'])
-def all_students():
-    if request.method == 'GET':
-        get_students=[student.to_dict() for student in StudentModel.query.all()]
+# My grading Models
+class Grades(db.Model):
+    __tablename__ = 'grades'
 
-        response= make_response(jsonify(get_students), 200)
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer)
+    math = db.Column(db.Integer)
+    english = db.Column(db.Integer)
+    kiswahili = db.Column(db.Integer)
+    social_studies = db.Column(db.Integer)
+    religious_education = db.Column(db.Integer)
+    total = db.Column(db.Integer)
+    created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow)
+    updated_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-        return response
-
-    elif request.method == 'POST':
-        data = request.get_json()
-        
-
-        new_student=StudentModel(**data)
-
-        db.session.add(new_student)
-        db.session.commit()
-
-        new_dict = new_student.to_dict()
-
-        response = make_response(jsonify(new_dict), 200)
-
-        return response
-    
-    else:
-        return f"Error erfoming action"
-    
-@app.route('/students/<int:id>', methods=['DELETE', 'PATCH'])
-def get_student(id):
-    student = StudentModel.query.filter_by(id = id).first()
-
-    if request.method == 'PATCH':
-        for attr, value in request.form.items():
-            setattr(student, attr, value)
-
-        db.session.commit()
-        
-        new_dict = student.to_dict()
-
-        response = make_response(jsonify(new_dict), 200)
-
-        return response
-    
-    elif request.method == 'DELETE':
-        db.session.delete(student)
-        db.session.commit()
-
-        return jsonify({"message": "Student deleted succesfully"})
-
-
+with app.app_context():
+    db.create_all()
 
 if __name__ == "__main__":
-    app.run(port=5555, debug=True)
-
-
+    app.run(debug=True)
