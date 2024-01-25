@@ -23,8 +23,8 @@ class StudentModel(db.Model, SerializerMixin):
         if len(value) < 2:
             raise ValueError(f'{key} is too short ')
         
-        if not value.isalpha():
-            raise ValueError(f'{key} must be alphabets')
+        #if not value.isalpha():
+            #raise ValueError(f'{key} must be alphabets')
         
         return value
         
