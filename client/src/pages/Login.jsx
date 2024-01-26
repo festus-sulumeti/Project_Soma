@@ -1,4 +1,3 @@
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,20 +8,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CheckCircleIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import { toast } from "sonner";
 import { BASE_URL } from "@/lib/utils";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useAuthStore } from "@/store/authStore";
+import { z } from "zod";
 
 const Login = () => {
-  const { user, setUser, setIsAuthenticated } = useAuthStore();
   const navigate = useNavigate();
   const loginSchema = z
     .object({
@@ -43,23 +39,35 @@ const Login = () => {
 
   const onSubmit = async (values) => {
     try {
-      axios
-        .post("http://localhost:5000/login", values)
-        .then((response) => {
-          localStorage.setItem("session", JSON.stringify(response.data));
-          toast.success("Login successful");
-          setIsAuthenticated(true);
-          setUser(JSON.parse(localStorage.getItem("session")).user)
-          navigate("/dashboard");
-    
-        })
-        .catch((error) => toast.error(error.response.data.message));
+      const response = await fetch(`${BASE_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+      // Handle the response data accordingly
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", data.user_email);
+
+        console.log(localStorage.getItem("token"));
+        // Redirect to dashboard
+        navigate('/dashboard')
+
+        toast.success("Login successful");
+      } else {
+        // Login failed, show error toast
+        toast.error(`Login failed: ${data.message}`);
+        console.error("Login failed:", data.message);
+      }
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
     }
   };
-
 
   return (
     <div className="flex flex-col items-center pl-14">

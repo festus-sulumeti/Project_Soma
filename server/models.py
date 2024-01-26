@@ -1,11 +1,14 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
+from sqlalchemy import func
 from sqlalchemy_serializer import SerializerMixin
 
 db = SQLAlchemy()
 
 class StudentModel(db.Model, SerializerMixin):
     __tablename__ = 'students'
+    
+    serialize_rules = ('-student_grades',)
 
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(25), nullable=False)
@@ -23,18 +26,18 @@ class StudentModel(db.Model, SerializerMixin):
         if len(value) < 2:
             raise ValueError(f'{key} is too short ')
         
-        if not value.isalpha():
-            raise ValueError(f'{key} must be alphabets')
+        #if not value.isalpha():
+            #raise ValueError(f'{key} must be alphabets')
         
         return value
         
     def __repr__(self):
         return f'<Student:{self.first_name} {self.last_name}> '
 
-   
-
-class ParentModel(db.Model):
+class ParentModel(db.Model, SerializerMixin):
     __tablename__ = 'parents'
+    
+    serialize_rules=('-student_parent',)
 
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(25), nullable=False)
@@ -46,6 +49,7 @@ class ParentModel(db.Model):
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
     student_parent = db.relationship('StudentModel', backref='parent')
+
 
 class TeacherModel(db.Model):
     __tablename__ = 'teachers'
@@ -61,8 +65,10 @@ class TeacherModel(db.Model):
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
     
-class ClassModel(db.Model):
+class ClassModel(db.Model, SerializerMixin):
     __tablename__ = 'classes'
+    
+    serialize_rules = ('-class_students','-class_teacher')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25), nullable=False)

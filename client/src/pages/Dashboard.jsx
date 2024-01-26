@@ -1,6 +1,3 @@
-import { useAuthStore } from "@/store/authStore";
-import { api } from "@/lib/utils";
-import { useEffect, useState } from "react";
 
 import AccountSummary from "@/components/AccountSummary";
 import CreateAccount from "@/components/CreateAccount";
@@ -9,8 +6,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { UserAddOutlined } from "@ant-design/icons";
 
 import { Input } from "@/components/ui/input";
-import { useAccountStore } from "@/store/accountsStore";
-import { useNavigate } from "react-router-dom";
 
 // const renderSearchResults = (results) => {
 //   if (!Array.isArray(results)) {
@@ -24,21 +19,6 @@ import { useNavigate } from "react-router-dom";
 // };
 
 const Dashboard = () => {
-  const { user, setUser, setIsAuthenticated } = useAuthStore();
-  const [students, setStudents, classes, setClasses] = useAccountStore(
-    (state) => [
-      state.students,
-      state.setStudents,
-      state.classes,
-      state.setClasses,
-    ]
-  );
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if(!user) navigate('/login')
-  },[user])
 
   // const [searchQuery, setSearchQuery] = useState("");
   // const [searchResults, setSearchResults] = useState([]);
@@ -60,26 +40,10 @@ const Dashboard = () => {
   //   // }
   // };
 
-  // useEffect(() => {
-  //   api
-  //     .get(`/students`)
-  //     .then((response) => setStudents(response.data));
-  // }, []);
-
-  // useEffect(() => {
-  //   api
-  //     .get(`/classes`)
-  //     .then((response) => setClasses(response.data));
-  // }, []);
 
   // const [properties, setProperties] = useState([]);
-
-  useEffect(() => {
-    api
-      .get("http://localhost:5000/property")
-      .then((res) => console.log(res.data));
-  }, []);
-
+  const user = localStorage.getItem('user')
+  console.log(user)
 
   return (
     <div className="flex items-start">
@@ -87,7 +51,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between">
           <h1 className="font-bold text-[36px]">Dashboard</h1>
           {user && (<h2 className="font-semibold text-[19px]">
-            Welcome, {user.first_name} {user.last_name}
+            Welcome, {user}
           </h2>)}
         </div>
 

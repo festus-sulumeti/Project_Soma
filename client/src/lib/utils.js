@@ -19,9 +19,9 @@ export const api = axios.create({
 
 api.interceptors.request.use((req) => {
   if (!req.headers["Authorization"]) {
-    const session = JSON.parse(localStorage.getItem("session"));
+    const token = localStorage.getItem("token");
 
-    req.headers["Authorization"] = `Bearer ${session.access_token}`;
+    req.headers["Authorization"] = `Bearer ${token}`;
   }
 
   return req;

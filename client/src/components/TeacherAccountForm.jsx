@@ -20,6 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { BASE_URL, api } from "@/lib/utils";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const createTeacherAccountSchema = z.object({
   first_name: z.string().min(2, {
@@ -31,26 +35,44 @@ const createTeacherAccountSchema = z.object({
   phone_number: z.string().length(10, {
     message: "Phone number must be 10 digits",
   }),
+  role: z.string(),
   email: z.string().email(),
   gender: z.enum(["Female", "Male"]),
 });
 
-const TeacherAccountForm = () => {
+const TeacherAccountForm = ({ refetch }) => {
+  const form = useForm({
+    resolver: zodResolver(createTeacherAccountSchema),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+      email: "",
+      gender: "",
+      role: "",
+    },
+  });
 
-    const form = useForm({
-      resolver: zodResolver(createTeacherAccountSchema),
-      defaultValues: {
-        first_name: "",
-        last_name: "",
-        phone_number: "",
-        email: "",
-        gender: "",
-      },
-    });
+  const [isLoading, setIsLoading] = useState(false);
 
-    function onSubmit(values) {
-      console.log(values);
-    }
+  function onSubmit(values) {
+    console.log(values);
+    setIsLoading(true);
+
+    api
+      .post(`${BASE_URL}/teacher`, values)
+      .then((response) => {
+        toast.success(response.data.message);
+        refetch();
+      })
+      .then(() => setIsLoading(false));
+  }
+
+  // {"email": "johndoe@gmail.com",
+  // "first_name": "John",
+  // "gender": "Male",
+  // "last_name": "Doe",
+  // "phone_number": "0712345678"}
 
   return (
     <div className="flex flex-col items-center">
@@ -116,6 +138,19 @@ const TeacherAccountForm = () => {
           />
           <FormField
             control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Role</FormLabel>
+                <FormControl>
+                  <Input placeholder="Science teacher" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="gender"
             render={({ field }) => (
               <FormItem>
@@ -139,12 +174,18 @@ const TeacherAccountForm = () => {
             )}
           />
           <div className="flex flex-col items-start">
-            <Button type="submit">Create an account</Button>
+            <Button disabled={isLoading} type="submit">
+              {" "}
+              {isLoading && (
+                <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+              )}{" "}
+              Create an account
+            </Button>
           </div>
         </form>
       </Form>
     </div>
   );
-}
+};
 
-export default TeacherAccountForm
+export default TeacherAccountForm;
