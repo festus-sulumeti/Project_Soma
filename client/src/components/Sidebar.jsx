@@ -54,11 +54,20 @@ const Sidebar = ({ selectedFilters, onAccountChange, onFiltersChange }) => {
                   value="teachers" 
                   id="teachers" 
                  />
-                <Label htmlFor="teachers">Teachers</Label>
+                <Label htmlFor="teachers">
+                  Teachers
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="parents" id="parents" />
-                <Label htmlFor="parents">Parents</Label>
+                <RadioGroupItem 
+                value="parents" 
+                id="parents" 
+                />
+                <Label 
+                  htmlFor="parents"
+                >
+                    Parents
+                </Label>
               </div>
             </RadioGroup>
             <AccordionItem className="border-b-none" value="students">
