@@ -6,6 +6,9 @@ from flask import current_app
 from alembic import context
 
 # Initializing Flask app
+from app.py import app
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DATABASE_CONFIG['user']}:{DATABASE_CONFIG['pw']}@{DATABASE_CONFIG['host']}:{DATABASE_CONFIG['port']}/{DATABASE_CONFIG['db']}"
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
