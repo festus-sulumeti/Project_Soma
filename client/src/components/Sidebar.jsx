@@ -43,10 +43,17 @@ const Sidebar = ({ selectedFilters, onAccountChange, onFiltersChange }) => {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="students" id="students" />
-                <Label htmlFor="students">Students</Label>
+                <Label 
+                   htmlFor="students"
+                >
+                  Students
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="teachers" id="teachers" />
+                <RadioGroupItem
+                  value="teachers" 
+                  id="teachers" 
+                 />
                 <Label htmlFor="teachers">Teachers</Label>
               </div>
               <div className="flex items-center space-x-2">
