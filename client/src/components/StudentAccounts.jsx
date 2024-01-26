@@ -40,16 +40,35 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, RefreshCcw } from "lucide-react";
 
-import { DoubleLeftOutlined, DoubleRightOutlined, UserAddOutlined } from "@ant-design/icons";
-import { useAccountStore } from "@/store/accountsStore";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import {
+  DoubleLeftOutlined,
+  DoubleRightOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 import StudentAccountForm from "./StudentAccountForm";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { toast } from "sonner";
 
 export function StudentAccounts() {
-  const [students] = useAccountStore((state) => [state.students])
-  const [renderedData, setRenderedData] = useState([...students]);
+  const [students, setStudents] = useState([]);
+  const [renderedData, setRenderedData] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {
+    axios.get(`${BASE_URL}/students`).then((response) => {
+      setStudents(response.data);
+      setRenderedData(response.data);
+    });
+  }, []);
+
+  const refetchStudents = () => {
+    axios.get(`${BASE_URL}/students`).then((response) => {
+      setStudents(response.data);
+      setRenderedData(response.data);
+    });
+  };
 
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -87,10 +106,25 @@ export function StudentAccounts() {
   });
 
   return (
-    <div>
-      <h1 className="pl-8 pt-8 text-[22px] font-medium">
-        List of student accounts
-      </h1>
+    <div className="pt-8">
+      <div className="flex items-center justify-between">
+        <h1 className="pl-8 text-[22px] font-medium">
+          List of student accounts
+        </h1>
+        <Button
+          size="icon"
+          onClick={() => {
+            setIsFetching(true);
+            setTimeout(() => {
+              refetchStudents();
+              setIsFetching(false);
+              toast.success("Student list updated successfully");
+            }, 1500);
+          }}
+        >
+          <RefreshCcw className={`h-4 w-4 ${isFetching && "animate-spin"}`} />
+        </Button>
+      </div>
       <div className="flex items-center justify-between py-4 ml-8">
         <div className="flex items-center gap-3">
           <Input
@@ -101,6 +135,7 @@ export function StudentAccounts() {
             }
             className="w-[270px]"
           />
+
           <Select
             onValueChange={(event) => setGradeFilter(event)}
             value={gradeFilter}
@@ -152,7 +187,7 @@ export function StudentAccounts() {
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <StudentAccountForm />
+              <StudentAccountForm refetch={refetchStudents} />
             </DialogContent>
           </Dialog>
         </div>
@@ -206,24 +241,7 @@ export function StudentAccounts() {
             )}
           </TableBody>
         </Table>
-        {/* <div className="flex items-center justify-center space-x-2 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div> */}
+
         <div className="flex items-center justify-center py-4 space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">
             <p className="text-sm font-medium">Rows per page</p>

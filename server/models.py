@@ -9,6 +9,8 @@ db = SQLAlchemy()
 
 class StudentModel(db.Model, SerializerMixin):
     __tablename__ = 'students'
+    
+    serialize_rules = ('-student_grades',)
 
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(25), nullable=False)
@@ -34,10 +36,10 @@ class StudentModel(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<Student:{self.first_name} {self.last_name}> '
 
-   
-
-class ParentModel(db.Model):
+class ParentModel(db.Model, SerializerMixin):
     __tablename__ = 'parents'
+    
+    serialize_rules=('-student_parent',)
 
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(25), nullable=False)
@@ -65,8 +67,10 @@ class TeacherModel(db.Model):
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 
     
-class ClassModel(db.Model):
+class ClassModel(db.Model, SerializerMixin):
     __tablename__ = 'classes'
+    
+    serialize_rules = ('-class_students','-class_teacher')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25), nullable=False)

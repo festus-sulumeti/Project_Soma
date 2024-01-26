@@ -35,7 +35,7 @@ def login():
         expiration_time = datetime.utcnow() + timedelta(hours=1)
         token = jwt.encode({'email': data['email'], 'exp': expiration_time}, SECRET_KEY, algorithm='HS256')
 
-        return jsonify({"success": True, "message": "Login successful", "token": token}), 200
+        return jsonify({"success": True, "message": "Login successful", "token": token, 'user_email':data['email']}), 200
     else:
         return jsonify({"success": False, "message": "Invalid credentials"}), 401
 
@@ -71,8 +71,9 @@ def get_student(id):
     student = StudentModel.query.filter_by(id = id).first()
 
     if request.method == 'PATCH':
-        for attr, value in request.form.items():
-            setattr(student, attr, value)
+        json = request.get_json()
+        for attr in json:
+            setattr(student, attr, json[attr])
 
         db.session.commit()
         

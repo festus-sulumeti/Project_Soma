@@ -4,12 +4,30 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
-import { useAccountStore } from "@/store/accountsStore";
+import { BASE_URL, api } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 
 
 const AccountSummary = () => {
-  const [students] = useAccountStore((state) => [state.students])
+  const [students, setStudents] = useState();
+  const [teachers, setTeachers] = useState();
+  
+  console.log(teachers)
+
+   useEffect(() => {
+     api
+       .get(`${BASE_URL}/students`)
+       .then((response) => setStudents(response.data));
+   }, []);
+
+   useEffect(() => {
+     api
+       .get(`${BASE_URL}/teacher`)
+       .then((response) => setTeachers(response.data));
+   }, []);
+
+
 
   return (
     <div className="mt-5 grid grid-cols-4 gap-4 *:cursor-pointer">
@@ -17,7 +35,7 @@ const AccountSummary = () => {
         <Card>
           <CardHeader>
             <CardTitle>Students</CardTitle>
-            <CardDescription>Number of students: {students.length}</CardDescription>
+            <CardDescription>Number of students: {students?.length}</CardDescription>
           </CardHeader>
         </Card>
       </Link>
@@ -33,7 +51,7 @@ const AccountSummary = () => {
         <Card>
           <CardHeader>
             <CardTitle>Teachers</CardTitle>
-            <CardDescription>Number of teachers: 10000</CardDescription>
+            <CardDescription>Number of teachers: {teachers?.length}</CardDescription>
           </CardHeader>
         </Card>
       </Link>

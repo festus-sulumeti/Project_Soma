@@ -7,18 +7,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuthStore } from "@/store/authStore";
 import {
+  DashboardOutlined,
   LogoutOutlined,
-  ProfileOutlined,
   UserOutlined
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { Button } from "./ui/button";
 
 const Navbar = () => {
-  const { user } = useAuthStore();
+  const user = localStorage.getItem("user");
+  const navigate = useNavigate();
 
   return (
     <div className="py-4 px-14 flex items-center justify-between border-b border-b-gray-300">
@@ -30,20 +30,26 @@ const Navbar = () => {
               <Avatar className="cursor-pointer font-bold">
                 <AvatarImage src="" />
                 <AvatarFallback>
-                  {user.name.split(" ").map((a) => a.charAt(0))}
+                  {/* {user.name.split(" ").map((a) => a.charAt(0))} */}
+                  {user.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="*:cursor-pointer">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <ProfileOutlined className="mr-2 h-4 w-4" /> Profile
+              <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                <DashboardOutlined className="mr-2 w-4 h-4" />
+                Dashboard
               </DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Feedback</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600">
+              <DropdownMenuItem
+                className="text-red-600"
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("user");
+                }}
+              >
                 <LogoutOutlined className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
