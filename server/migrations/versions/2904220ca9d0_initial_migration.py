@@ -1,8 +1,8 @@
-"""Create tables in models.py
+"""Initial migration
 
-Revision ID: 639d46239e7b
+Revision ID: 2904220ca9d0
 Revises: 
-Create Date: 2024-01-24 18:27:08.359366
+Create Date: 2024-01-26 04:16:48.613973
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '639d46239e7b'
+revision = '2904220ca9d0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,7 +25,7 @@ def upgrade():
     sa.Column('gender', sa.String(), nullable=False),
     sa.Column('phone_number', sa.String(length=25), nullable=False),
     sa.Column('email', sa.String(length=50), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
     sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -37,8 +37,7 @@ def upgrade():
     sa.Column('phone_number', sa.String(length=25), nullable=False),
     sa.Column('email', sa.String(length=50), nullable=False),
     sa.Column('role', sa.String(length=25), nullable=False),
-    sa.Column('password', sa.String(length=128), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
     sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -46,7 +45,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=25), nullable=False),
     sa.Column('teacher_id', sa.Integer(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
     sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.ForeignKeyConstraint(['teacher_id'], ['teachers.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -58,7 +57,7 @@ def upgrade():
     sa.Column('gender', sa.String(), nullable=False),
     sa.Column('parent_id', sa.Integer(), nullable=False),
     sa.Column('class_name', sa.String(length=25), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
     sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.ForeignKeyConstraint(['class_name'], ['classes.name'], ),
     sa.ForeignKeyConstraint(['parent_id'], ['parents.id'], ),
@@ -74,6 +73,8 @@ def upgrade():
     sa.Column('social_studies', sa.Integer(), nullable=False),
     sa.Column('religious_education', sa.Integer(), nullable=False),
     sa.Column('total', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('updated_at', sa.TIMESTAMP(), nullable=True),
     sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
