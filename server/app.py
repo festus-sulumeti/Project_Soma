@@ -1,16 +1,16 @@
 #app.py
-
 from flask import Flask, make_response, jsonify, request
-from models import StudentModel, db
+from models import StudentModel, ParentModel, db
 from flask_cors import CORS
 import jwt
 from datetime import datetime, timedelta
 from flask_migrate import Migrate
 from flask_restful import Api
 from resources.teachers import Teacher
+from config import DATABASE_CONFIG  # Import the config
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///soma.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DATABASE_CONFIG['user']}:{DATABASE_CONFIG['pw']}@{DATABASE_CONFIG['host']}:{DATABASE_CONFIG['port']}/{DATABASE_CONFIG['db']}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
@@ -18,6 +18,7 @@ db.init_app(app)
 api = Api(app)
 CORS(app)
 SECRET_KEY = '4567'  # Replace with a secure secret key
+
 
 @app.route("/")
 def index():
