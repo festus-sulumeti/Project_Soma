@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SchoolPlanning from "./pages/SchoolPlanning";
+import LoginParent from "./pages/LoginParent";
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/parents/login" element={<LoginParent />} />
         <Route element={<ProtectedWrapper />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounts/:account" element={<Accounts />} />
