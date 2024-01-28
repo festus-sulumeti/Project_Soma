@@ -70,7 +70,7 @@ const Login = () => {
   };
 
   return (
-
+    <div className="flex flex-col items-center">
       <Form {...loginForm}>
         <form
           onSubmit={loginForm.handleSubmit(onSubmit)}
