@@ -8,16 +8,29 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from resources.teachers import Teacher
 from config import DATABASE_CONFIG  # Import the config
+from itsdangerous import Serializer, TimedJSONWebSignatureSerializer
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DATABASE_CONFIG['user']}:{DATABASE_CONFIG['pw']}@{DATABASE_CONFIG['host']}:{DATABASE_CONFIG['port']}/{DATABASE_CONFIG['db']}"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:Maganga@localhost/somadb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 migrate = Migrate(app, db)
+
 db.init_app(app)
 api = Api(app)
 CORS(app)
 SECRET_KEY = '4567'  # Replace with a secure secret key
+
+app.config['MAIL_SERVER'] = 'maganga.mwambonu@student.moringaschool.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'Admin'
+app.config['MAIL_PASSWORD'] = 'Password'
+app.config['MAIL_DEFAULT_SENDER'] = 'maganga.mwambonu@student.moringaschool.com'
+
+mail = Mail(app)
 
 
 @app.route("/")
@@ -35,9 +48,59 @@ def login():
         expiration_time = datetime.utcnow() + timedelta(hours=1)
         token = jwt.encode({'email': data['email'], 'exp': expiration_time}, SECRET_KEY, algorithm='HS256')
 
+
         return jsonify({"success": True, "message": "Login successful", "token": token, 'user_email':data['email']}), 200
     else:
         return jsonify({"success": False, "message": "Invalid credentials"}), 401
+
+
+def generate_reset_token(email):
+    serializer = TimedJSONWebSignatureSerializer(SECRET_KEY, expires_in=3600)
+    reset_token = serializer.dumps({"email": email}).decode('utf-8')
+    return reset_token
+
+def send_reset_token(email, reset_token):
+    subject = 'Password Confirmation Request'
+    body = f"Click the following link to reset your password: {request.url_root}reset_password/{reset_token}"
+    recipients = [email]
+
+    try:
+        msg = Message(subject=subject, recipients=recipients, body=body)
+        mail.send(msg)
+
+        return jsonify({"success": True, "message": "Reset token sent to email"}), 200
+    except Exception as e:
+        error_message = f"Error sending email: {str(e)}"
+        print(error_message) 
+
+        return jsonify({"success": False, "message": error_message}), 500
+
+
+
+
+    
+
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    try:
+        data = request.json
+        user_email = data.get('email')
+
+        user = ParentModel.query.filter_by(email=user_email).first()
+
+        
+        try:
+                reset_token = generate_reset_token(user_email)
+                send_reset_token(user_email, reset_token)
+
+                return jsonify({"success": True, "message": "Reset token sent to email"}), 200
+        except Exception as e:
+                return jsonify({"success": False, "message": f"Error sending email: {str(e)}"}), 500
+    
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Exception: {str(e)}, failed to reset password"}), 500
+
+
 
 @app.route("/students", methods=['GET', 'POST'])
 def all_students():
@@ -118,6 +181,15 @@ def remove_parent(parent_id):
         return jsonify({'message': 'Parent removed successfully'}), 200
     else:
         return jsonify({'message': 'Parent not found'}), 404
+
+@app.route('/parents', methods=['GET'])
+def getparent():
+    new_parent = [parent.to_dict() for parent in ParentModel.query.all()]
+
+    response = make_response(jsonify(new_parent), 200)
+
+    return response
+    
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
