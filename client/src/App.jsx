@@ -12,13 +12,14 @@ function App() {
   return (
     <main className="pb-10">
       <Routes>
-        <Route path="/" element={<Home />} />  
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/parents/login" element={<LoginParent />} />
         <Route element={<ProtectedWrapper />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounts/:account" element={<Accounts />} />
-          <Route path="/school/:plan" element={<SchoolPlanning/>}/>
+          <Route path="/school/:plan" element={<SchoolPlanning />} />
+          
         </Route>
       </Routes>
     </main>

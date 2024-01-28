@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,7 +14,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import { toast } from "sonner";
 import { BASE_URL } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -70,8 +70,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center pl-14">
-      <h1 className="text-[28px] font-bold">Login into your account</h1>
+    <div className="flex flex-col items-center">
       <Form {...loginForm}>
         <form
           onSubmit={loginForm.handleSubmit(onSubmit)}
@@ -111,7 +110,7 @@ const Login = () => {
             <Button asChild variant="link">
               <Link to={""}>Forgot password?</Link>
             </Button>
-            <Button type="submit">Login</Button>
+            <Button type="submit">Login as Admin</Button>
           </div>
         </form>
       </Form>
