@@ -16,7 +16,7 @@ import { CheckCircleIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
-const Login = () => {
+const LoginParent = () => {
   const loginSchema = z.object({
     email: z.string().email(),
     password: z.string().min(6, {
@@ -44,7 +44,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-[28px] font-bold">Admin Login into your account</h1>
+      <h1 className="text-[28px] font-bold">Login into your account as a Parent</h1>
       <Form {...loginForm}>
         <form
           onSubmit={loginForm.handleSubmit(onSubmit)}
@@ -55,7 +55,7 @@ const Login = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel> Parent Email</FormLabel>
                 <FormControl>
                   <Input placeholder="johndoe@gmail.com" {...field} />
                 </FormControl>
@@ -90,7 +90,7 @@ const Login = () => {
             <Button asChild variant="link">
               <Link to={''}>Forgot password?</Link>
             </Button>
-            <Button type="submit">Login</Button>
+            <Button type="submit"> Parent Login</Button>
           </div>
         </form>
       </Form>
@@ -98,4 +98,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginParent;
