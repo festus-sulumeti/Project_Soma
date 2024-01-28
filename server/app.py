@@ -119,19 +119,39 @@ def get_parents():
 @app.route('/add_parent', methods=['POST'])
 def add_parent():
     data = request.get_json()
+    
+    password = bcrypt.generate_password_hash(f"{data['first_name']}{data['last_name']}")
 
     new_parent = ParentModel(
         first_name=data['first_name'],
         last_name=data['last_name'],
         phone_number=data['phone_number'],
         email=data['email'],
-        gender=data['gender']
+        gender=data['gender'],
+        password=password
     )
 
     db.session.add(new_parent)
     db.session.commit()
 
     return jsonify({'message': 'Parent added successfully'}), 201
+
+@app.route('/update_parent/<int:id>', methods=['PATCH'])
+def update_parent(id):
+    parent = ParentModel.query.filter(ParentModel.id == id).first()
+    
+    if not parent:
+        return {"message":"Parent not found"},404
+    
+    data = request.get_json()
+    
+    for attr in data:
+        setattr(parent, attr, data[attr])
+        
+    db.session.add(parent)
+    db.session.commit()
+
+    return jsonify({'message': 'Parent updated successfully'}), 201
 
 @app.route('/remove_parent/<int:parent_id>', methods=['DELETE'])
 def remove_parent(parent_id):

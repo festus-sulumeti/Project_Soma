@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { BASE_URL } from "@/lib/utils";
+import { BASE_URL, api } from "@/lib/utils";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -69,14 +69,14 @@ const StudentAccountForm = ({
     values["parent_id"] = parseInt(values["parent_id"]);
     try {
       if (!isPatch) {
-        axios.post(`${BASE_URL}/students`, values).then((response) => {
+        api.post(`${BASE_URL}/students`, values).then((response) => {
           toast.success("Student created successfully");
           setIsLoading(false);
           refetch();
           form.reset();
         });
       } else {
-        axios
+        api
           .patch(`${BASE_URL}/students/${defaultValues.id}`, values)
           .then((response) => {
             toast.success("Student updated successfully");
@@ -93,7 +93,7 @@ const StudentAccountForm = ({
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-[28px] font-bold">
-        {!isPatch ? "Create a new student account" : "Update exisiting account"}
+        {!isPatch ? "Create a new student account" : "Update existing account"}
       </h1>
       <Form {...form}>
         <form

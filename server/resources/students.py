@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse, fields, marshal_with
+from flask_restful import Resource, reqparse, fields, marshal_with, request
 from models import db, StudentModel
 
 resource_fields = {
@@ -39,6 +39,22 @@ class Student(Resource):
             return {"message": "Student added successfully", "status": "success"}
         except Exception as e:
             return {"message": "Unable to add student", "status": "fail"}
+        
+    def patch(self,id):
+        student = StudentModel.query.filter(StudentModel.id == id).first()
+        
+        if not student:
+            return {'message':'Student not found'},404
+        
+        data = request.get_json()
+        
+        for attr in data:
+            setattr(student, attr, data[attr])
+            
+        db.session.add(student)
+        db.session.commit()
+        
+        return {"message":"Student updated successfully"},200
 
     def delete(self, id):
         try:

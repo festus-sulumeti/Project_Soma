@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Navbar/>
       <App/>
-      <Toaster richColors/>
+      <Toaster richColors position='top-right'/>
     </BrowserRouter>
   </React.StrictMode>
 );
