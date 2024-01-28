@@ -1,5 +1,5 @@
-import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -22,6 +22,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { BASE_URL } from "@/lib/utils";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
 const createStudentAccountSchema = z.object({
   first_name: z.string().min(2, {
     message: "First name must be at least 2 characters.",
@@ -29,63 +34,67 @@ const createStudentAccountSchema = z.object({
   last_name: z.string().min(2, {
     message: "Last name must be at least 2 characters.",
   }),
-  class_id: z.number({
+  class_name: z.string({
     required_error: "Please select a class",
     invalid_type_error: "Please select a valid class",
   }),
-  parent_id: z.optional(z.nullable(z.number())),
-  gender: z.nativeEnum(["Female", "Male"], {
+  parent_id: z.string(),
+  gender: z.nativeEnum(["female", "male"], {
     errorMap: (issue, ctx) => {
       return { message: "Please select the gender" };
     },
   }),
 });
 
-const StudentAccountForm = () => {
-  const classes = [
-    {
-      id: 1,
-      name: "Grade 1",
-      teacher_id: 101,
-    },
-    {
-      id: 2,
-      name: "Grade 2",
-      teacher_id: 102,
-    },
-  ];
-
-  const parents = [
-    {
-      id: 1,
-      first_name: "John",
-      last_name: "Doe",
-    },
-    {
-      id: 2,
-      first_name: "Jane",
-      last_name: "Boe",
-    },
-  ];
+const StudentAccountForm = ({
+  refetch,
+  defaultValues = {
+    first_name: "",
+    last_name: "",
+    class_name: "",
+    gender: "",
+    parent_id: "",
+  },
+  isPatch,
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(createStudentAccountSchema),
-    defaultValues: {
-      first_name: "",
-      last_name: "",
-      class_id: "",
-      parent_id: null,
-      gender: "",
-    },
+    defaultValues,
   });
 
   function onSubmit(values) {
-    console.log(values);
+    setIsLoading(true);
+    values["parent_id"] = parseInt(values["parent_id"]);
+    try {
+      if (!isPatch) {
+        axios.post(`${BASE_URL}/students`, values).then((response) => {
+          toast.success("Student created successfully");
+          setIsLoading(false);
+          refetch();
+          form.reset();
+        });
+      } else {
+        axios
+          .patch(`${BASE_URL}/students/${defaultValues.id}`, values)
+          .then((response) => {
+            toast.success("Student updated successfully");
+            setIsLoading(false);
+            refetch();
+            form.reset();
+          });
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   }
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-[28px] font-bold">Create a new student account</h1>
+      <h1 className="text-[28px] font-bold">
+        {!isPatch ? "Create a new student account" : "Update exisiting account"}
+      </h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -135,8 +144,8 @@ const StudentAccountForm = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Male">Male</SelectItem>
-                    <SelectItem value="Female">Female</SelectItem>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -145,25 +154,13 @@ const StudentAccountForm = () => {
           />
           <FormField
             control={form.control}
-            name="class_id"
+            name="class_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Class</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a class" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {classes.map(({ id, name }) => (
-                      <SelectItem value={id}>{name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormLabel>Class name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Grade 1" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -173,28 +170,20 @@ const StudentAccountForm = () => {
             name="parent_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Parent</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a parent" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {parents.map(({id, first_name, last_name}) => (
-                      <SelectItem value={id}>{first_name} {last_name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FormLabel>Parent ID</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="1" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           <div className="flex flex-col items-start">
-            <Button type="submit">Create an account</Button>
+            <Button type="submit" disabled={isLoading}>
+              {" "}
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {!isPatch ? "Create account" : "Update account"}
+            </Button>
           </div>
         </form>
       </Form>

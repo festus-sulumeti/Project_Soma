@@ -1,4 +1,3 @@
-import React,{useState} from "react"; //used the usestate hook for handling changes
 import {
   Accordion,
   AccordionContent,
@@ -7,39 +6,39 @@ import {
 } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Checkbox } from "./ui/checkbox";
 
-const Sidebar = ({ selectedFilters, onAccountChange, onFiltersChange }) => {
-  const [selectedRadio, setSelectedRadio] = useState("");
-
-  const handleRadioChange = (account) => {
-    setSelectedRadio(account.id);// Assumming account has an id property
-    onAccountChange(account); // Communicate selected account to Dashboard
-  };
-
-  const handleCheckboxChange = (id) => {
-    const newSelectedFilters = [...selectedFilters];
-
-    if (newSelectedFilters.includes(id)) {
-      newSelectedFilters.splice(newSelectedFilters.indexOf(id), 1);
-    } else {
-      newSelectedFilters.push(id);
-    }
-
-    onFiltersChange(newSelectedFilters); // Communicate selected filters to Dashboard
-  };
+const Sidebar = () => {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   return (
-    <div className="border-r border-r-gray-300 h-screen py-4 pr-20">
+    <div className="border-r border-r-gray-300 h-screen py-4 pr-8">
+      <h2
+        className={`text-[22px] font-medium ${
+          pathname === "/dashboard" && "text-blue-600"
+        }`}
+      >
+        <Link to={"/dashboard"}>Dashboard</Link>
+      </h2>
       <Accordion type="multiple" collapsible="true">
         <AccordionItem className="border-b-none" value="personnel">
-          <AccordionTrigger className="text-[22px]">Accounts</AccordionTrigger>
+          <AccordionTrigger
+            className={`text-[22px] ${
+              pathname.includes("accounts") && "text-blue-600"
+            }`}
+          >
+            Accounts
+          </AccordionTrigger>
           <AccordionContent>
-            <RadioGroup 
-              defaultValue="" 
+            <RadioGroup
+              value={
+                pathname.includes("/accounts") ? pathname.split("/")[2] : ""
+              }
+              onValueChange={(e) => navigate(`/accounts/${e}`)}
+              defaultValue=""
               className="ml-3"
-              value={selectedRadio}
-              onChange={handleRadioChange}
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="students" id="students" />
@@ -71,25 +70,16 @@ const Sidebar = ({ selectedFilters, onAccountChange, onFiltersChange }) => {
               </div>
             </RadioGroup>
             <AccordionItem className="border-b-none" value="students">
-              <AccordionTrigger className="ml-0 mt-[15px]">
+              <AccordionTrigger className="ml-4 mt-[15px]">
                 Filter by:
               </AccordionTrigger>
-              <AccordionContent className="flex flex-col gap-2">
-
-                <div className="ml-8 flex items-center gap-1">
-                  <Checkbox 
-                    id="grade-1" 
-                    value={selectedFilters} 
-                    onChange= {handleCheckboxChange}
-                  />
+              <AccordionContent className="flex flex-col gap-2 *:ml-8">
+                <div className="flex items-center gap-1">
+                  <Checkbox id="grade-1" />
                   <label htmlFor="grade-1">Grade 1</label>
                 </div>
-                <div className="ml-8 flex items-center gap-1">
-                  <Checkbox 
-                    id="grade-2"
-                    value={selectedFilters} 
-                    onChange= {handleCheckboxChange}
-                  />
+                <div className="flex items-center gap-1">
+                  <Checkbox id="grade-2" />
 
                   <label htmlFor="grade-2">Grade 2</label>
                 </div>
@@ -97,24 +87,36 @@ const Sidebar = ({ selectedFilters, onAccountChange, onFiltersChange }) => {
             </AccordionItem>
           </AccordionContent>
         </AccordionItem>
-        
-        {/* School Planning Section */}
         <AccordionItem value="school-planning">
-          <AccordionTrigger className="text-[24px]">School Planning</AccordionTrigger>
+          <AccordionTrigger
+            className={`text-[24px] text-nowrap  ${
+              pathname.includes("school") && "text-blue-600"
+            }`}
+          >
+            School Planning
+          </AccordionTrigger>
           <AccordionContent className="ml-6">
-            <div className="flex flex-col gap-2">
-              <Checkbox id="term-events" rounded />
-              <label htmlFor="term-events" className="ml-2">Term Events</label>
-
-              <Checkbox id="exams" rounded />
-              <label htmlFor="exams" className="ml-2">Exams</label>
-
-              <Checkbox id="library" rounded />
-              <label htmlFor="library" className="ml-2">Library</label>
-            </div>
+            <RadioGroup
+              value={pathname.includes("/school") ? pathname.split("/")[2] : ""}
+              onValueChange={(e) => navigate(`/school/${e}`)}
+              defaultValue=""
+              className="ml-3"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="events" id="events" />
+                <Label htmlFor="events">Term Events</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="exams" id="exams" />
+                <Label htmlFor="exams">Exams</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="library" id="library" />
+                <Label htmlFor="library">Library</Label>
+              </div>
+            </RadioGroup>
           </AccordionContent>
         </AccordionItem>
-        {/* End of School Planning Section */}
       </Accordion>
     </div>
   );

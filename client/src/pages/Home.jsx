@@ -19,9 +19,9 @@ const Home = () => {
           size: "lg",
           className: "mt-5",
         })}
-        to={"/signup"}
+        to={"/login"}
       >
-        Get started <ArrowRight className="ml-2 h-5 w-5" />
+        Login <ArrowRight className="ml-2 h-5 w-5" />
       </Link>
     </div>
   );
