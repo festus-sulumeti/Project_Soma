@@ -70,8 +70,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center pl-14">
-      <h1 className="text-[28px] font-bold">Login into your account</h1>
+
       <Form {...loginForm}>
         <form
           onSubmit={loginForm.handleSubmit(onSubmit)}
@@ -111,7 +110,7 @@ const Login = () => {
             <Button asChild variant="link">
               <Link to={""}>Forgot password?</Link>
             </Button>
-            <Button type="submit">Login</Button>
+            <Button type="submit">Login as Admin</Button>
           </div>
         </form>
       </Form>

@@ -4,16 +4,13 @@ import Accounts from "./pages/Accounts";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import SchoolPlanning from "./pages/SchoolPlanning";
-
 
 function App() {
   return (
     <main className="pb-10">
       <Routes>
         <Route path="/" element={<Home />} />  
-        <Route path="/login" element={<Login />} />
-        <Route element={<ProtectedWrapper />}>
+        <Route path="/login" element={<Login />} /
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounts/:account" element={<Accounts />} />
           <Route path="/school/:plan" element={<SchoolPlanning/>}/>
