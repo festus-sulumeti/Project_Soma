@@ -1,3 +1,7 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -5,72 +9,42 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-// import { toast } from "sonner";
-import { BASE_URL } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { CheckCircleIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login = () => {
-  const navigate = useNavigate();
-  const loginSchema = z
-    .object({
-      email: z.string().email(),
-      password: z.string().min(6, {
-        message: "Password must be at least 6 characters.",
-      }),
-    })
-    .required();
+  const loginSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6, {
+      message: "Password must be at least 6 characters.",
+    }),
+  }).required();
 
   const loginForm = useForm({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues:{
+      email:"",
+      password:""
+    }
   });
 
-  const onSubmit = async (values) => {
-    try {
-      const response = await fetch(`${BASE_URL}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+  const onSubmit = (values) => {
+    console.log(values);
 
-      const data = await response.json();
-      // Handle the response data accordingly
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", data.user_email);
+    toast.success("Login successfull", {
+      position: "top-right",
+      icon:<CheckCircleIcon className="mr-2 h-4 w-4 text-green-600" />
+    });
 
-        console.log(localStorage.getItem("token"));
-        // Redirect to dashboard
-        navigate('/dashboard')
-
-        toast.success("Login successful");
-      } else {
-        // Login failed, show error toast
-        toast.error(`Login failed: ${data.message}`);
-        console.error("Login failed:", data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
-    }
   };
 
   return (
-
+    <div className="flex flex-col items-center">
+      <h1 className="text-[28px] font-bold">Admin Login into your account</h1>
       <Form {...loginForm}>
         <form
           onSubmit={loginForm.handleSubmit(onSubmit)}
@@ -85,6 +59,9 @@ const Login = () => {
                 <FormControl>
                   <Input placeholder="johndoe@gmail.com" {...field} />
                 </FormControl>
+                {/* <FormDescription>
+                This is your public display name.
+              </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -102,20 +79,21 @@ const Login = () => {
                     {...field}
                   />
                 </FormControl>
+                {/* <FormDescription>
+                This is your public display name.
+              </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
           />
           <div className="flex flex-col items-start">
             <Button asChild variant="link">
-              <Link to={""}>Forgot password?</Link>
+              <Link to={''}>Forgot password?</Link>
             </Button>
             <Button type="submit">Login as Admin</Button>
           </div>
         </form>
       </Form>
-      {/* Toast container for displaying notifications */}
-      <ToastContainer />
     </div>
   );
 };
