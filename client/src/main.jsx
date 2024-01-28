@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Navbar/>
       <App/>
-      <Toaster />
+      <Toaster richColors/>
     </BrowserRouter>
   </React.StrictMode>
 );

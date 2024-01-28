@@ -8,11 +8,12 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from resources.teachers import Teacher
 from config import DATABASE_CONFIG  # Import the config
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DATABASE_CONFIG['user']}:{DATABASE_CONFIG['pw']}@{DATABASE_CONFIG['host']}:{DATABASE_CONFIG['port']}/{DATABASE_CONFIG['db']}"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
 db.init_app(app)
 api = Api(app)
@@ -26,6 +27,21 @@ def index():
 
 api.add_resource(Teacher, '/teacher', '/teacher/<int:id>') 
 
+@app.route('/parents/login', methods=['POST'])
+def parent_login():
+    data = request.json
+    
+    parent = ParentModel.query.filter(ParentModel.email == data['email']).first()    
+    
+    #If parent is not found or if password does not match, return an error message
+    if not parent or not bcrypt.check_password_hash(parent.password, data['password']) or not data['password']:
+        return {"message":"Invalid credentials"},400
+    
+    expiration_time = datetime.utcnow() + timedelta(hours=1)
+    token = jwt.encode({'email': data['email'], 'exp': expiration_time}, SECRET_KEY, algorithm='HS256')
+
+    return jsonify({"success": True, "message": "Login successful", "token": token, 'user_email':data['email'], 'role':'parent'}), 200
+    
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -35,7 +51,7 @@ def login():
         expiration_time = datetime.utcnow() + timedelta(hours=1)
         token = jwt.encode({'email': data['email'], 'exp': expiration_time}, SECRET_KEY, algorithm='HS256')
 
-        return jsonify({"success": True, "message": "Login successful", "token": token, 'user_email':data['email']}), 200
+        return jsonify({"success": True, "message": "Login successful", "token": token, 'user_email':data['email'], 'role':'admin'}), 200
     else:
         return jsonify({"success": False, "message": "Invalid credentials"}), 401
 
@@ -51,7 +67,6 @@ def all_students():
     elif request.method == 'POST':
         data = request.get_json()
         
-
         new_student=StudentModel(**data)
 
         db.session.add(new_student)
@@ -88,6 +103,12 @@ def get_student(id):
         db.session.commit()
 
         return jsonify({"message": "Student deleted succesfully"})
+
+@app.route('/parents')
+def get_parents():
+    parents = ParentModel.query.all()
+    
+    return [parent.to_dict() for parent in parents]
 
 
 # New routes for parents
