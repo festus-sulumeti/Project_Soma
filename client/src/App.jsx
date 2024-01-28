@@ -1,10 +1,11 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import ProtectedWrapper from "./components/ProtectedWrapper";
+import Accounts from "./pages/Accounts";
+import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import LoginParent from "./pages/LoginParent";
+import SchoolPlanning from "./pages/SchoolPlanning";
 
-import Dashboard from "./pages/Dashboard";
-import ProtectedWrapper from "./components/ProtectedWrapper";
 
 function App() {
   return (
@@ -12,10 +13,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/loginparent" element={<LoginParent />} />
-        
-        <Route element={<ProtectedWrapper/>}>
+        <Route element={<ProtectedWrapper />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/accounts/:account" element={<Accounts />} />
+          <Route path="/school/:plan" element={<SchoolPlanning />} />
+          
         </Route>
       </Routes>
     </main>
