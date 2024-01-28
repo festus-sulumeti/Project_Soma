@@ -68,24 +68,24 @@ class Teacher(Resource):
         except:
             return {"message": "Unable to delete teacher", "status": "fail"}
 
-    # def patch(self, id):
-    #     if id:
-    #         teacher = TeacherModel.query.filter_by(id=id).first()
+    def patch(self, id):
+        if id:
+            teacher = TeacherModel.query.filter_by(id=id).first()
 
-    #         if teacher:
-    #             data = Teacher.parser.parse_args()
+            if teacher:
+                data = Teacher.parser.parse_args()
 
-    #             for key, value in data.items():
-    #                 if value is not None:
-    #                     setattr(teacher, key, value)
+                for key, value in data.items():
+                    if value is not None:
+                        setattr(teacher, key, value)
                 
-    #             try:
-    #                 db.session.commit()
-    #                 return {"message": "Teacher updated successfully", "status": "success"}
-    #             except Exception as e:
-    #                 print(f"An error occurred: {e}")
-    #                 db.session.rollback()
-    #                 return {"message": "Unable to update teacher", "status": "fail"}
-    #     else:
-    #         return {"message": "Teacher not found", "status": "fail"}
+                try:
+                    db.session.commit()
+                    return {"message": "Teacher updated successfully", "status": "success"}
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+                    db.session.rollback()
+                    return {"message": "Unable to update teacher", "status": "fail"}
+        else:
+            return {"message": "Teacher not found", "status": "fail"}
 

@@ -37,46 +37,55 @@ const createTeacherAccountSchema = z.object({
   }),
   role: z.string(),
   email: z.string().email(),
-  gender: z.enum(["Female", "Male"]),
+  gender: z.enum(["female", "male"]),
 });
 
-const TeacherAccountForm = ({ refetch }) => {
+const TeacherAccountForm = ({
+  refetch,
+  isPatch,
+  defaultValues = {
+    first_name: "",
+    last_name: "",
+    class_name: "",
+    gender: "",
+    parent_id: "",
+  },
+}) => {
   const form = useForm({
     resolver: zodResolver(createTeacherAccountSchema),
-    defaultValues: {
-      first_name: "",
-      last_name: "",
-      phone_number: "",
-      email: "",
-      gender: "",
-      role: "",
-    },
+    defaultValues
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
   function onSubmit(values) {
-    console.log(values);
     setIsLoading(true);
 
-    api
-      .post(`${BASE_URL}/teacher`, values)
-      .then((response) => {
-        toast.success(response.data.message);
-        refetch();
-      })
-      .then(() => setIsLoading(false));
+    if (!isPatch) {
+      api
+        .post(`${BASE_URL}/teacher`, values)
+        .then((response) => {
+          toast.success(response.data.message);
+          refetch();
+        })
+        .then(() => setIsLoading(false));
+    } else {
+      api
+        .patch(`${BASE_URL}/teacher/${defaultValues.id}`, values)
+        .then((response) => {
+          toast.success("Teacher updated successfully");
+          setIsLoading(false);
+          refetch();
+          form.reset();
+        });
+    }
   }
-
-  // {"email": "johndoe@gmail.com",
-  // "first_name": "John",
-  // "gender": "Male",
-  // "last_name": "Doe",
-  // "phone_number": "0712345678"}
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-[28px] font-bold">Create a new teacher account</h1>
+      <h1 className="text-[28px] font-bold">
+        {!isPatch ? "Create a new student account" : "Update existing account"}
+      </h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -165,8 +174,8 @@ const TeacherAccountForm = ({ refetch }) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Male">Male</SelectItem>
-                    <SelectItem value="Female">Female</SelectItem>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -179,7 +188,7 @@ const TeacherAccountForm = ({ refetch }) => {
               {isLoading && (
                 <Loader2 className="mr-2 w-4 h-4 animate-spin" />
               )}{" "}
-              Create an account
+              {!isPatch ? "Create account" : "Update account"}
             </Button>
           </div>
         </form>

@@ -1,15 +1,18 @@
+import ParentAccountForm from "@/components/ParentAccountForm";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BASE_URL } from "@/lib/utils";
 import { DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, LucideUserCog2, MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
 const deleteParent = (id) => {
@@ -75,25 +78,35 @@ export const columns = [
       const parent = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuSeparator /> */}
-            <DropdownMenuItem
-              onClick={() => deleteParent(parent.id)}
-              className="text-red-600"
-            >
-              <DeleteOutlined className="mr-2 h-4 w-4" /> Delete parent
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Dialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DialogTrigger>
+                <DropdownMenuItem className="cursor-pointer">
+                  <LucideUserCog2 className="mr-2 w-4 h-4" />
+                  Update Parent
+                </DropdownMenuItem>
+              </DialogTrigger>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => deleteParent(parent.id)}
+                className="text-red-600 cursor-pointer"
+              >
+                <DeleteOutlined className="mr-2 h-4 w-4" /> Delete parent
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DialogContent>
+            <ParentAccountForm defaultValues={parent} isPatch />
+          </DialogContent>
+        </Dialog>
       );
     },
   },
