@@ -1,24 +1,42 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {
   DashboardOutlined,
   LogoutOutlined,
   UserOutlined
 } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { Button } from "./ui/button";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const user = localStorage.getItem("user");
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear user data on logout
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // Notify the user about successful logout
+    toast.success("Logout successful");
+
+    // Redirect the user to the home page
+    navigate("/");
+  };
 
   return (
     <div className="py-4 px-14 flex items-center justify-between border-b border-b-gray-300">
@@ -30,7 +48,6 @@ const Navbar = () => {
               <Avatar className="cursor-pointer font-bold">
                 <AvatarImage src="" />
                 <AvatarFallback>
-                  {/* {user.name.split(" ").map((a) => a.charAt(0))} */}
                   {user.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -45,10 +62,7 @@ const Navbar = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-red-600"
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("user");
-                }}
+                onClick={handleLogout}
               >
                 <LogoutOutlined className="mr-2 h-4 w-4" />
                 Logout
