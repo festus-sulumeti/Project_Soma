@@ -90,7 +90,7 @@ const Login = () => {
             <Button asChild variant="link">
               <Link to={''}>Forgot password?</Link>
             </Button>
-            <Button type="submit">Login</Button>
+            <Button type="submit">Login as Admin</Button>
           </div>
         </form>
       </Form>

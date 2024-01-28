@@ -90,7 +90,7 @@ const LoginParent = () => {
             <Button asChild variant="link">
               <Link to={''}>Forgot password?</Link>
             </Button>
-            <Button type="submit"> Parent Login</Button>
+            <Button type="submit"> Login as Parent</Button>
           </div>
         </form>
       </Form>
