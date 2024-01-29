@@ -1,8 +1,12 @@
 import React from 'react'
+import ExamDetails from '../components/ExamDetails'
 
 const SchoolPlanning = () => {
   return (
-    <div>SchoolPlanning</div>
+    <div>
+      
+      <ExamDetails />
+    </div>
   )
 }
 
