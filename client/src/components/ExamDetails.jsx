@@ -5,8 +5,8 @@ const ExamDetails = () => {
   // Example data for individual student performance
   const [studentPerformanceData, setStudentPerformanceData] = useState({
     name: "Safia Yussuf",
-    subjects: ["Math", "Science", "English"],
-    scores: [90, 85, 92],
+    subjects: ["Math", "Science", "English", "S/Studies", "Kiswahili", "Computer Studies"],
+    scores: [90, 85, 92, 76, 96, 80],
   });
 
   const studentPerformanceChart = {
@@ -85,20 +85,22 @@ const ExamDetails = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-100 rounded-md shadow-md">
       {/* Individual Student Performance Section */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-4">{`${studentPerformanceData.name}'s Performance`}</h1>
-        <div className="border p-4 rounded-md bg-white shadow-md mb-4">
-          <Chart
-            options={studentPerformanceChart.options}
-            series={studentPerformanceChart.series}
-            type="bar"
-          />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-md shadow-md p-6">
+        <div>
+          <h1 className="text-3xl font-bold mb-4">{`${studentPerformanceData.name}'s Performance`}</h1>
+          <div className="border p-4 rounded-md">
+            <Chart
+              options={studentPerformanceChart.options}
+              series={studentPerformanceChart.series}
+              type="bar"
+            />
+          </div>
         </div>
         <div>
-          <h2 className="text-xl font-semibold">Detailed Scores</h2>
-          <ul>
+          <h2 className="text-xl font-semibold mt-4">Detailed Scores</h2>
+          <ul className="list-disc pl-6">
             {studentPerformanceData.subjects.map((subject, index) => (
               <li key={index}>
                 <strong>{subject}:</strong> {studentPerformanceData.scores[index]}
@@ -109,17 +111,27 @@ const ExamDetails = () => {
       </div>
 
       {/* Exam Details Overview Section */}
-      <div>
-        <h1 className="text-3xl font-bold mb-4">Exam Details Overview</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 bg-white rounded-md shadow-md p-6 mt-8">
+        {/* Grade 1 Section */}
+        <div>
+          <h2 className="text-xl font-semibold">Grade 1</h2>
+          {/* Grade 1 content here */}
+        </div>
 
         {/* Average Scores Chart */}
-        <div className="mb-4">
+        <div>
           <h2 className="text-xl font-semibold">Average Scores</h2>
           <Chart options={averageScoresData.options} series={averageScoresData.series} type="bar" />
         </div>
 
+        {/* Grade 2 Section */}
+        <div>
+          <h2 className="text-xl font-semibold"></h2>
+          {/* Grade 2 content here */}
+        </div>
+
         {/* Top Performers Chart */}
-        <div className="mb-4">
+        <div>
           <h2 className="text-xl font-semibold">Top Performers</h2>
           <Chart options={topPerformersData.options} series={topPerformersData.series} type="radar" />
         </div>
