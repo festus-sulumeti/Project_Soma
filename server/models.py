@@ -47,7 +47,6 @@ class ParentModel(db.Model, SerializerMixin):
     gender = db.Column(db.String, nullable=False)
     phone_number = db.Column(db.String(25), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String(), nullable=False)
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 

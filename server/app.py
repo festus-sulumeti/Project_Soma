@@ -8,6 +8,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from resources.teachers import Teacher
 from resources.students import Student
+from resources.parents import Parent
 from config import DATABASE_CONFIG  # Import the config
 from flask_bcrypt import Bcrypt
 
@@ -57,6 +58,9 @@ def login():
         return jsonify({"success": False, "message": "Invalid credentials"}), 401
 
 api.add_resource(Student, '/students', '/students/<int:id>')
+
+api.add_resource(Parent, '/parents', '/parents/<int:id>')
+
 
 # @app.route("/students", methods=['GET', 'POST'])
 # def all_students():
@@ -108,61 +112,61 @@ api.add_resource(Student, '/students', '/students/<int:id>')
 
 #         return jsonify({"message": "Student deleted succesfully"})
 
-@app.route('/parents')
-def get_parents():
-    parents = ParentModel.query.all()
+# @app.route('/parents')
+# def get_parents():
+#     parents = ParentModel.query.all()
     
-    return [parent.to_dict() for parent in parents]
+#     return [parent.to_dict() for parent in parents]
 
 
-# New routes for parents
-@app.route('/add_parent', methods=['POST'])
-def add_parent():
-    data = request.get_json()
+# # New routes for parents
+# @app.route('/add_parent', methods=['POST'])
+# def add_parent():
+#     data = request.get_json()
     
-    password = bcrypt.generate_password_hash(f"{data['first_name']}{data['last_name']}")
+#     password = bcrypt.generate_password_hash(f"{data['first_name']}{data['last_name']}")
 
-    new_parent = ParentModel(
-        first_name=data['first_name'],
-        last_name=data['last_name'],
-        phone_number=data['phone_number'],
-        email=data['email'],
-        gender=data['gender'],
-        password=password
-    )
+#     new_parent = ParentModel(
+#         first_name=data['first_name'],
+#         last_name=data['last_name'],
+#         phone_number=data['phone_number'],
+#         email=data['email'],
+#         gender=data['gender'],
+#         password=password
+#     )
 
-    db.session.add(new_parent)
-    db.session.commit()
+#     db.session.add(new_parent)
+#     db.session.commit()
 
-    return jsonify({'message': 'Parent added successfully'}), 201
+#     return jsonify({'message': 'Parent added successfully'}), 201
 
-@app.route('/update_parent/<int:id>', methods=['PATCH'])
-def update_parent(id):
-    parent = ParentModel.query.filter(ParentModel.id == id).first()
+# @app.route('/update_parent/<int:id>', methods=['PATCH'])
+# def update_parent(id):
+#     parent = ParentModel.query.filter(ParentModel.id == id).first()
     
-    if not parent:
-        return {"message":"Parent not found"},404
+#     if not parent:
+#         return {"message":"Parent not found"},404
     
-    data = request.get_json()
+#     data = request.get_json()
     
-    for attr in data:
-        setattr(parent, attr, data[attr])
+#     for attr in data:
+#         setattr(parent, attr, data[attr])
         
-    db.session.add(parent)
-    db.session.commit()
+#     db.session.add(parent)
+#     db.session.commit()
 
-    return jsonify({'message': 'Parent updated successfully'}), 201
+#     return jsonify({'message': 'Parent updated successfully'}), 201
 
-@app.route('/remove_parent/<int:parent_id>', methods=['DELETE'])
-def remove_parent(parent_id):
-    parent = ParentModel.query.get(parent_id)
+# @app.route('/remove_parent/<int:parent_id>', methods=['DELETE'])
+# def remove_parent(parent_id):
+#     parent = ParentModel.query.get(parent_id)
 
-    if parent:
-        db.session.delete(parent)
-        db.session.commit()
-        return jsonify({'message': 'Parent removed successfully'}), 200
-    else:
-        return jsonify({'message': 'Parent not found'}), 404
+#     if parent:
+#         db.session.delete(parent)
+#         db.session.commit()
+#         return jsonify({'message': 'Parent removed successfully'}), 200
+#     else:
+#         return jsonify({'message': 'Parent not found'}), 404
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
