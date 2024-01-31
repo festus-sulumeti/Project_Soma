@@ -22,3 +22,7 @@ Currently, two official plugins are available:
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
+
+
+
+npm install react-apexcharts apexcharts
