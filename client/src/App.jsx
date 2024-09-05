@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SchoolPlanning from "./pages/SchoolPlanning";
 import LoginParent from "./pages/LoginParent";
+import ForgotPassword from"./pages/Forgotpassword"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/parents/login" element={<LoginParent />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route element={<ProtectedWrapper />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/accounts/:account" element={<Accounts />} />
