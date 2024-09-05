@@ -122,7 +122,7 @@ const LoginParent = () => {
           />
           <div className="flex flex-col items-start">
             <Button asChild variant="link">
-              <Link to={""}>Forgot password?</Link>
+              <Link to={"/forgot-password"}>Forgot password?</Link>
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4" />}
