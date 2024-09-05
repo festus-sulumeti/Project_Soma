@@ -2,7 +2,7 @@
 
 DATABASE_CONFIG = {
     'user': 'postgres',
-    'pw': '#Sulumeti28',
+    'pw': 'Maganga',
     'db': 'somadb',
     'host': 'localhost',
     'port': '5432',

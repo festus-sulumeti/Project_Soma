@@ -16,8 +16,8 @@ class StudentModel(db.Model, SerializerMixin):
     first_name = db.Column(db.String(25), nullable=False)
     last_name = db.Column(db.String(25), nullable=False)
     gender = db.Column(db.String, nullable=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=False)
-    class_name = db.Column(db.String(25), db.ForeignKey('classes.name'), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'))
+    class_name = db.Column(db.String(25), db.ForeignKey('classes.name'))
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
     updated_at = db.Column(db.TIMESTAMP, onupdate=db.func.now())
 

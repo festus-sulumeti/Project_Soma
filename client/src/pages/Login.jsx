@@ -38,34 +38,29 @@ const Login = () => {
   });
 
   const onSubmit = async (values) => {
-    try {
-      const response = await fetch(`${BASE_URL}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+    const response = await fetch(`${BASE_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
 
-      const data = await response.json();
-      // Handle the response data accordingly
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", data.user_email);
+    const data = await response.json();
+    // Handle the response data accordingly
+    if (data.success) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", data.user_email);
 
-        console.log(localStorage.getItem("token"));
-        // Redirect to dashboard
-        navigate('/dashboard')
+      console.log(localStorage.getItem("token"));
+      // Redirect to dashboard
+      navigate("/dashboard");
 
-        toast.success("Login successful");
-      } else {
-        // Login failed, show error toast
-        toast.error(`Login failed: ${data.message}`);
-        console.error("Login failed:", data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      toast.success("Login successful");
+    } else {
+      // Login failed, show error toast
+      toast.error(`Login failed: ${data.message}`);
+      console.error("Login failed:", data.message);
     }
   };
 
@@ -108,7 +103,7 @@ const Login = () => {
           />
           <div className="flex flex-col items-start">
             <Button asChild variant="link">
-              <Link to={""}>Forgot password?</Link>
+              <Link to="/forgotpassword">Forgot password?</Link>
             </Button>
             <Button type="submit">Login as Admin</Button>
           </div>

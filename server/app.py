@@ -15,12 +15,24 @@ from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DATABASE_CONFIG['user']}:{DATABASE_CONFIG['pw']}@{DATABASE_CONFIG['host']}:{DATABASE_CONFIG['port']}/{DATABASE_CONFIG['db']}"
 
+
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
+
 db.init_app(app)
 api = Api(app)
 CORS(app)
 SECRET_KEY = '4567'  # Replace with a secure secret key
+
+app.config['MAIL_SERVER'] = 'maganga.mwambonu@student.moringaschool.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'Admin'
+app.config['MAIL_PASSWORD'] = 'Password'
+app.config['MAIL_DEFAULT_SENDER'] = 'maganga.mwambonu@student.moringaschool.com'
+
+mail = Mail(app)
 
 
 @app.route("/")
@@ -167,6 +179,15 @@ api.add_resource(Parent, '/parents', '/parents/<int:id>')
 #         return jsonify({'message': 'Parent removed successfully'}), 200
 #     else:
 #         return jsonify({'message': 'Parent not found'}), 404
+
+@app.route('/parents', methods=['GET'])
+def getparent():
+    new_parent = [parent.to_dict() for parent in ParentModel.query.all()]
+
+    response = make_response(jsonify(new_parent), 200)
+
+    return response
+    
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
