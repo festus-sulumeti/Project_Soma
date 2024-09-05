@@ -1,4 +1,9 @@
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import {
+  MoreHorizontal,
+  ArrowUpDown,
+  UserCog,
+  LucideUserCog2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -9,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { BASE_URL } from "@/lib/utils";
 import { toast } from "sonner";
@@ -97,12 +102,15 @@ export const columns = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DialogTrigger>
-                <DropdownMenuItem>Update user</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <LucideUserCog2 className="mr-2 w-4 h-4" />
+                  Update user
+                </DropdownMenuItem>
               </DialogTrigger>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => deleteStudent(student.id)}
-                className="text-red-600"
+                className="text-red-600 cursor-pointer"
               >
                 <DeleteOutlined className="mr-2 h-4 w-4" /> Delete student
               </DropdownMenuItem>

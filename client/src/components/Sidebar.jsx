@@ -42,15 +42,31 @@ const Sidebar = () => {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="students" id="students" />
-                <Label htmlFor="students">Students</Label>
+                <Label 
+                   htmlFor="students"
+                >
+                  Students
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="teachers" id="teachers" />
-                <Label htmlFor="teachers">Teachers</Label>
+                <RadioGroupItem
+                  value="teachers" 
+                  id="teachers" 
+                 />
+                <Label htmlFor="teachers">
+                  Teachers
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="parents" id="parents" />
-                <Label htmlFor="parents">Parents</Label>
+                <RadioGroupItem 
+                value="parents" 
+                id="parents" 
+                />
+                <Label 
+                  htmlFor="parents"
+                >
+                    Parents
+                </Label>
               </div>
             </RadioGroup>
             <AccordionItem className="border-b-none" value="students">

@@ -55,6 +55,7 @@ export function StudentAccounts() {
   const [students, setStudents] = useState([]);
   const [renderedData, setRenderedData] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
+  
 
   useEffect(() => {
     axios.get(`${BASE_URL}/students`).then((response) => {
@@ -85,6 +86,7 @@ export function StudentAccounts() {
 
     setRenderedData(filteredData);
   }, [gradeFilter, students]);
+
 
   const table = useReactTable({
     data: renderedData,

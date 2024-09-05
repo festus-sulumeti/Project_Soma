@@ -1,4 +1,4 @@
-import TeacherAccountForm from "@/components/TeacherAccountForm";
+import ParentAccountForm from "@/components/ParentAccountForm";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BASE_URL } from "@/lib/utils";
 import { DeleteOutlined } from "@ant-design/icons";
@@ -15,14 +15,14 @@ import axios from "axios";
 import { ArrowUpDown, LucideUserCog2, MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
-const deleteTeacher = (id) => {
+const deleteParent = (id) => {
   try {
     axios
-      .delete(`${BASE_URL}/teacher/${id}`)
+      .delete(`${BASE_URL}/remove_parent/${id}`)
       .then((response) => toast.success(response.data.message));
   } catch (err) {
-    toast.error("Error during login");
-    console.error("Error during login:", err);
+    toast.error("Error during deletion");
+    console.error("Error during deletion:", err.message);
   }
 };
 
@@ -73,13 +73,9 @@ export const columns = [
     header: "Gender",
   },
   {
-    accessorKey: "role",
-    header: "Role",
-  },
-  {
     id: "actions",
     cell: ({ row }) => {
-      const teacher = row.original;
+      const parent = row.original;
 
       return (
         <Dialog>
@@ -95,20 +91,20 @@ export const columns = [
               <DialogTrigger>
                 <DropdownMenuItem className="cursor-pointer">
                   <LucideUserCog2 className="mr-2 w-4 h-4" />
-                  Update teacher
+                  Update Parent
                 </DropdownMenuItem>
               </DialogTrigger>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => deleteTeacher(teacher.id)}
+                onClick={() => deleteParent(parent.id)}
                 className="text-red-600 cursor-pointer"
               >
-                <DeleteOutlined className="mr-2 h-4 w-4" /> Delete teacher
+                <DeleteOutlined className="mr-2 h-4 w-4" /> Delete parent
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <DialogContent>
-            <TeacherAccountForm defaultValues={teacher} isPatch />
+            <ParentAccountForm defaultValues={parent} isPatch />
           </DialogContent>
         </Dialog>
       );

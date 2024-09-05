@@ -4,22 +4,26 @@ import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { BASE_URL, api } from "@/lib/utils";
 
 const createParentAccountSchema = z.object({
   first_name: z.string().min(2, {
@@ -32,29 +36,56 @@ const createParentAccountSchema = z.object({
     message: "Phone number must be 10 digits",
   }),
   email: z.string().email(),
-  gender:z.enum(['Female','Male']),
+  gender: z.enum(["female", "male"]),
 });
 
-const ParentAccountForm = () => {
+const ParentAccountForm = ({
+  refetch,
+  defaultValues = {
+    first_name: "",
+    last_name: "",
+    class_name: "",
+    gender: "",
+    parent_id: "",
+  },
+  isPatch,
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
 
-    const form = useForm({
-      resolver: zodResolver(createParentAccountSchema),
-      defaultValues: {
-        first_name: "",
-        last_name: "",
-        phone_number: "",
-        email: "",
-        gender:""
-      },
-    });
+  const form = useForm({
+    resolver: zodResolver(createParentAccountSchema),
+    defaultValues,
+  });
 
-    function onSubmit(values) {
-      console.log(values);
+  function onSubmit(values) {
+    console.log(values);
+    setIsLoading(true);
+
+    if(!isPatch){
+      api
+        .post(`${BASE_URL}/add_parent`, values)
+        .then((response) => {
+          toast.success(response.data.message);
+          refetch();
+        })
+        .then(() => setIsLoading(false));
+    }else{
+      api
+        .patch(`${BASE_URL}/update_parent/${defaultValues.id}`, values)
+        .then((response) => {
+          toast.success("Parent updated successfully");
+          setIsLoading(false);
+          refetch();
+          form.reset();
+        });
     }
+  }
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-[28px] font-bold">Create a new parent account</h1>
+      <h1 className="text-[28px] font-bold">
+        {!isPatch ? "Create a new parent account" : "Update existing account"}
+      </h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -130,8 +161,8 @@ const ParentAccountForm = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Male">Male</SelectItem>
-                    <SelectItem value="Female">Female</SelectItem>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -139,7 +170,10 @@ const ParentAccountForm = () => {
             )}
           />
           <div className="flex flex-col items-start">
-            <Button type="submit">Create an account</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {!isPatch ? "Create account" : "Update account"}
+            </Button>
           </div>
         </form>
       </Form>
