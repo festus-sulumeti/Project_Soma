@@ -63,11 +63,11 @@ const ForgotPassword = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-[28px] font-bold">Forgot Password</h1>
+      <h1 className="text-2xl font-bold mb-4 sm:text-3xl">Forgot Password</h1>
       <Form {...forgotPasswordForm}>
         <form
           onSubmit={forgotPasswordForm.handleSubmit(onSubmit)}
-          className="space-y-8 w-[450px] mt-8"
+          className="space-y-8 w-full max-w-md px-4 mt-8"
         >
           <FormField
             control={forgotPasswordForm.control}
@@ -80,19 +80,20 @@ const ForgotPassword = () => {
                     type="email"
                     placeholder="johndoe@gmail.com"
                     {...field}
+                    className="w-full"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading && <Loader2 className="mr-2 h-4 w-4" />}
             Send Reset Link
           </Button>
         </form>
       </Form>
-      <Button asChild variant="link">
+      <Button asChild variant="link" className="mt-4">
         <Link to="/parents/login">Back to Login</Link>
       </Button>
     </div>
