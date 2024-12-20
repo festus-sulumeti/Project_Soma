@@ -3,12 +3,10 @@ import ProtectedWrapper from "./components/ProtectedWrapper";
 import Accounts from "./pages/Accounts";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
-
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SchoolPlanning from "./pages/SchoolPlanning";
 import LoginParent from "./pages/LoginParent";
-import Forgotpassword from"./pages/Forgotpassword"
 
 function App() {
   return (
