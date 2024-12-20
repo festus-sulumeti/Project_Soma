@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SchoolPlanning from "./pages/SchoolPlanning";
 import LoginParent from "./pages/LoginParent";
-import ForgotPassword from"./pages/Forgotpassword"
+import Forgotpassword from"./pages/Forgotpassword"
 
 function App() {
   return (
