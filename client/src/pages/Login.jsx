@@ -38,41 +38,31 @@ const Login = () => {
   });
 
   const onSubmit = async (values) => {
-    try {
-      // Hardcoded credentials
-      const hardcodedCredentials = {
-        email: "admin@gmail.com",
-        password: "password",
-      };
-  
-      // Check if entered credentials match hardcoded ones
-      if (
-        values.email === hardcodedCredentials.email &&
-        values.password === hardcodedCredentials.password
-      ) {
-        // Simulate a successful login
-        const fakeResponse = {
-          success: true,
-          token: "fake-jwt-token", // Fake token for demo purposes
-          user_email: values.email,
-        };
-  
-        localStorage.setItem("token", fakeResponse.token);
-        localStorage.setItem("user", fakeResponse.user_email);
-  
-        console.log(localStorage.getItem("token"));
-        // Redirect to dashboard
-        navigate("/dashboard");
-  
-        toast.success("Login successful");
-      } else {
-        // Invalid credentials
-        toast.error("Invalid credentials");
-        console.error("Login failed: Invalid credentials");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("An error occurred during login");
+
+    const response = await fetch(`${BASE_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+
+    const data = await response.json();
+    // Handle the response data accordingly
+    if (data.success) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", data.user_email);
+
+      console.log(localStorage.getItem("token"));
+      // Redirect to dashboard
+      navigate("/dashboard");
+
+      toast.success("Login successful");
+    } else {
+      // Login failed, show error toast
+      toast.error(`Login failed: ${data.message}`);
+      console.error("Login failed:", data.message);
+
     }
   };
   
@@ -116,7 +106,7 @@ const Login = () => {
           />
           <div className="flex flex-col items-start">
             <Button asChild variant="link">
-              <Link to={""}>Forgot password?</Link>
+              <Link to="/forgotpassword">Forgot password?</Link>
             </Button>
             <Button type="submit">Login as Admin</Button>
           </div>
