@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -38,7 +37,6 @@ const Login = () => {
   });
 
   const onSubmit = async (values) => {
-
     const response = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
@@ -48,31 +46,22 @@ const Login = () => {
     });
 
     const data = await response.json();
-    // Handle the response data accordingly
     if (data.success) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", data.user_email);
-
-      console.log(localStorage.getItem("token"));
-      // Redirect to dashboard
       navigate("/dashboard");
-
       toast.success("Login successful");
     } else {
-      // Login failed, show error toast
       toast.error(`Login failed: ${data.message}`);
-      console.error("Login failed:", data.message);
-
     }
   };
-  
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
       <Form {...loginForm}>
         <form
           onSubmit={loginForm.handleSubmit(onSubmit)}
-          className="space-y-8 w-[450px] mt-8"
+          className="space-y-8 w-full max-w-md bg-white p-6 rounded-md shadow-md"
         >
           <FormField
             control={loginForm.control}
@@ -104,15 +93,16 @@ const Login = () => {
               </FormItem>
             )}
           />
-          <div className="flex flex-col items-start">
-            <Button asChild variant="link">
+          <div className="flex flex-col items-start space-y-4">
+            <Button asChild variant="link" className="text-sm">
               <Link to="/forgotpassword">Forgot password?</Link>
             </Button>
-            <Button type="submit">Login as Admin</Button>
+            <Button type="submit" className="w-full">
+              Login as Admin
+            </Button>
           </div>
         </form>
       </Form>
-      {/* Toast container for displaying notifications */}
       <ToastContainer />
     </div>
   );
