@@ -50,7 +50,6 @@ const LoginParent = () => {
       });
 
       const data = await response.json();
-      // Handle the response data accordingly
       if (data.success) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", data.user_email);
@@ -62,7 +61,6 @@ const LoginParent = () => {
           icon: <CheckCircleIcon className="mr-2 h-4 w-4 text-green-600" />,
         });
       } else {
-        // Login failed, show error toast
         toast.error(`Login failed: ${data.message}`);
         console.error("Login failed:", data.message);
       }
@@ -75,27 +73,27 @@ const LoginParent = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <h1 className="text-[28px] font-bold">
-        Login into your account as a Parent
-      </h1>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <h1 className="text-[28px] font-bold mb-6 text-center">Login into your account as a Parent</h1>
       <Form {...loginForm}>
         <form
           onSubmit={loginForm.handleSubmit(onSubmit)}
-          className="space-y-8 w-[450px] mt-8"
+          className="space-y-8 w-full max-w-md mx-auto mt-8 p-6 border rounded-lg shadow-md bg-white"
         >
           <FormField
             control={loginForm.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel> Parent Email</FormLabel>
+                <FormLabel>Parent Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="johndoe@gmail.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="johndoe@gmail.com"
+                    {...field}
+                    className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </FormControl>
-                {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -111,21 +109,21 @@ const LoginParent = () => {
                     type="password"
                     placeholder="strong-password"
                     {...field}
+                    className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </FormControl>
-                {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
           />
           <div className="flex flex-col items-start">
             <Button asChild variant="link">
-              <Link to={"/forgot-password"}>Forgot password?</Link>
+              <Link to={"/forgot-password"} className="text-sm  hover:underline">
+                Forgot password?
+              </Link>
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4" />}
+            <Button type="submit" disabled={isLoading} className="w-full mt-4 py-3 text-white rounded-md">
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Login as Parent
             </Button>
           </div>
