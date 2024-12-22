@@ -21,17 +21,21 @@ Soma is a web-based platform designed to streamline the process of analyzing stu
 To get started with Soma on your local machine, follow these steps:
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-username/soma-student-performance.git
+ ```bash
+   https://github.com/festus-sulumeti/Project_Soma.git
+ 
+ ```
 
-```
+2. Navigation and dependanci installation: Navigate into the project folder and install the necessary dependencies:
 
-2. Install dependencies: Navigate into the project folder and install the necessary dependencies:
+ ```bash
+      cd soma-student-performance
+
+ ```
 
 ```bash
-
-cd soma-student-performance
 npm install
+
 ```
 
 3. Run the development server: Start the development server with the following command:
@@ -39,6 +43,7 @@ npm install
 ```bash
 
 npm run dev
+
 ```
 4. Access the application: Open your browser and navigate to:
 
