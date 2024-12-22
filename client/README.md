@@ -22,7 +22,7 @@ To get started with Soma on your local machine, follow these steps:
 
 1. **Clone the repository**:
  ```bash
-   https://github.com/festus-sulumeti/Project_Soma.git
+   git clone https://github.com/festus-sulumeti/Project_Soma.git
  
  ```
 
